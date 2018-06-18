@@ -1,6 +1,6 @@
 # apparat/artefakt-core
 
-[![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Scrutinizer Code Quality][scrutinizer-image]][scrutinizer-url]  [![Documentation Status][readthedocs-image]][readthedocs-url] [![Clear architecture][clear-architecture-image]][clear-architecture-url]
+[![Build Status][travis-image]][travis-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Scrutinizer Code Quality][scrutinizer-image]][scrutinizer-url] [![Code Climate][codeclimate-image]][codeclimate-url] [![Documentation Status][readthedocs-image]][readthedocs-url] [![Clear architecture][clear-architecture-image]][clear-architecture-url]
 
 > Artefakt Pattern Library Core
 
@@ -46,6 +46,8 @@ Copyright © 2018 [Joschi Kuphal][author-url] / joschi@kuphal.net. Licensed unde
 [coveralls-url]: https://coveralls.io/github/apparat/artefakt-core?branch=master
 [scrutinizer-image]: https://scrutinizer-ci.com/g/apparat/artefakt-core/badges/quality-score.png?b=master
 [scrutinizer-url]: https://scrutinizer-ci.com/g/apparat/artefakt-core/?branch=master
+[codeclimate-image]: https://scrutinizer-ci.com/g/apparat/artefakt-core/badges/quality-score.png?b=master
+[codeclimate-url]: https://scrutinizer-ci.com/g/apparat/artefakt-core/?branch=master
 [readthedocs-image]: https://readthedocs.org/projects/apparat-artefakt-core/badge/?version=latest
 [readthedocs-url]: http://apparat-artefakt-core.readthedocs.io/en/latest/?badge=latest
 [clear-architecture-image]: https://img.shields.io/badge/Clear%20Architecture-%E2%9C%94-brightgreen.svg

@@ -1,11 +1,11 @@
 {
   "generator-clearphp": {
-    "run": 59,
+    "run": 63,
     "github": {
       "ssh": "git@github.com:apparat/artefakt-core.git",
       "https": "https://github.com/apparat/artefakt-core"
     },
-    "codeclimate": "",
+    "codeclimate": "2933da27d7609980f72d817ecab7abc4d0495e9753ba4f8d8de5e6e184031c56",
     "scrutinizer": true,
     "coverage": true,
     "docs": true,

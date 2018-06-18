@@ -36,3 +36,9 @@ after_script:
   - >-
     bash -c 'if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then php
     vendor/bin/coveralls -v; fi;'
+  - >-
+    bash -c 'if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then
+    vendor/bin/test-reporter; fi;'
+addons:
+  code_climate:
+    repo_token: 2933da27d7609980f72d817ecab7abc4d0495e9753ba4f8d8de5e6e184031c56
