@@ -1,0 +1,8 @@
+site_name: apparat/artefakt-core
+site_description: Artefakt Pattern Library Core
+site_author: Joschi Kuphal
+repo_url: https://github.com/apparat/artefakt-core
+docs_dir: doc
+pages:
+- Home: 'index.md'
+- To-Do: 'todo.md'

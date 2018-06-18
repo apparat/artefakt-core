@@ -1,0 +1,27 @@
+{
+  "generator-clearphp": {
+    "run": 59,
+    "github": {
+      "ssh": "git@github.com:apparat/artefakt-core.git",
+      "https": "https://github.com/apparat/artefakt-core"
+    },
+    "codeclimate": "",
+    "scrutinizer": true,
+    "coverage": true,
+    "docs": true,
+    "apidocs": false,
+    "year": 2018,
+    "vendor": "apparat",
+    "project": "artefakt-core",
+    "description": "Artefakt Pattern Library Core",
+    "website": "https://apparat.tools/artefakt",
+    "license": "MIT",
+    "stability": "RC",
+    "namespace": "Artefakt",
+    "module": "Core",
+    "php": ">=7.2",
+    "authorName": "Joschi Kuphal",
+    "authorEmail": "joschi@kuphal.net",
+    "authorWebsite": "https://jkphl.is"
+  }
+}
