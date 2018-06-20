@@ -57,8 +57,7 @@ abstract class AbstractTestBase extends TestCase
     /**
      * Set up before class
      */
-    public static function setUpBeforeClass(
-    )/* The :void return type declaration that should be here would cause a BC issue */
+    public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
         self::$slugify = new Slugify();

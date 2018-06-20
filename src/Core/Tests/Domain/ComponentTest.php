@@ -61,4 +61,26 @@ class ComponentTest extends AbstractTestBase
         $this->assertEquals($componentSlug, $component->getSlug());
         $this->assertEquals($componentSlug.'set', $component->setSlug($componentSlug.'set')->getSlug());
     }
+
+    /**
+     * Test an invalid component name
+     *
+     * @expectedException \Artefakt\Core\Domain\Exceptions\InvalidArgumentException
+     * @expectedExceptionCode 1529435561
+     */
+    public function testInvalidComponentName()
+    {
+        new Component('', 'slug');
+    }
+
+    /**
+     * Test an invalid component slug
+     *
+     * @expectedException \Artefakt\Core\Domain\Exceptions\InvalidArgumentException
+     * @expectedExceptionCode 1529523904
+     */
+    public function testInvalidComponentSlug()
+    {
+        new Component('Name', '');
+    }
 }

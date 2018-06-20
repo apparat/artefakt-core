@@ -37,6 +37,7 @@
 namespace Artefakt\Core\Domain\Model;
 
 use Artefakt\Core\Domain\Contract\AbstractNodeInterface;
+use Artefakt\Core\Domain\Exceptions\InvalidArgumentException;
 
 /**
  * Abstract Node
@@ -68,7 +69,7 @@ abstract class AbstractNode implements AbstractNodeInterface
     public function __construct(string $name, string $slug)
     {
         $this->setName($name);
-        $this->slug = $slug;
+        $this->setSlug($slug);
     }
 
     /**
@@ -90,6 +91,13 @@ abstract class AbstractNode implements AbstractNodeInterface
      */
     public function setName(string $name): AbstractNodeInterface
     {
+        $name = trim($name);
+        if (!strlen($name)) {
+            throw new InvalidArgumentException(
+                sprintf(InvalidArgumentException::INVALID_COMPONENT_NAME_STR, $name),
+                InvalidArgumentException::INVALID_COMPONENT_NAME
+            );
+        }
         $this->name = $name;
 
         return $this;
@@ -114,6 +122,13 @@ abstract class AbstractNode implements AbstractNodeInterface
      */
     public function setSlug(string $slug): AbstractNode
     {
+        $slug = trim($slug);
+        if (!strlen($slug)) {
+            throw new InvalidArgumentException(
+                sprintf(InvalidArgumentException::INVALID_COMPONENT_SLUG_STR, $slug),
+                InvalidArgumentException::INVALID_COMPONENT_SLUG
+            );
+        }
         $this->slug = $slug;
 
         return $this;
