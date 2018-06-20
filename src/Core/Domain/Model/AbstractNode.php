@@ -37,7 +37,6 @@
 namespace Artefakt\Core\Domain\Model;
 
 use Artefakt\Core\Domain\Contract\AbstractNodeInterface;
-use Artefakt\Core\Domain\Model\Traits\NodeTrait;
 
 /**
  * Abstract Node
@@ -48,7 +47,43 @@ use Artefakt\Core\Domain\Model\Traits\NodeTrait;
 abstract class AbstractNode implements AbstractNodeInterface
 {
     /**
-     * Use Node methods
+     * Component name
+     *
+     * @var string
      */
-    use NodeTrait;
+    protected $name;
+
+    /**
+     * Node constructor
+     *
+     * @param string $name Node name
+     */
+    public function __construct(string $name)
+    {
+        $this->setName($name);
+    }
+
+    /**
+     * Get the component name
+     *
+     * @return string Component name
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set the component name
+     *
+     * @param string $name Component name
+     *
+     * @return AbstractNodeInterface Self reference
+     */
+    public function setName(string $name): AbstractNodeInterface
+    {
+        $this->name = $name;
+
+        return $this;
+    }
 }

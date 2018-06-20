@@ -36,6 +36,7 @@
 
 namespace Artefakt\Core\Tests;
 
+use Cocur\Slugify\Slugify;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -46,5 +47,20 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class AbstractTestBase extends TestCase
 {
+    /**
+     * Slugify instance
+     *
+     * @var Slugify
+     */
+    protected static $slugify;
 
+    /**
+     * Set up before class
+     */
+    public static function setUpBeforeClass(
+    )/* The :void return type declaration that should be here would cause a BC issue */
+    {
+        parent::setUpBeforeClass();
+        self::$slugify = new Slugify();
+    }
 }
