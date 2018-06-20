@@ -52,15 +52,23 @@ abstract class AbstractNode implements AbstractNodeInterface
      * @var string
      */
     protected $name;
+    /**
+     * Component name slug
+     *
+     * @var string
+     */
+    protected $slug;
 
     /**
      * Node constructor
      *
      * @param string $name Node name
+     * @param string $slug Node name slug
      */
-    public function __construct(string $name)
+    public function __construct(string $name, string $slug)
     {
         $this->setName($name);
+        $this->slug = $slug;
     }
 
     /**
@@ -83,6 +91,30 @@ abstract class AbstractNode implements AbstractNodeInterface
     public function setName(string $name): AbstractNodeInterface
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Return the component name slug
+     *
+     * @return string Component name slug
+     */
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    /**
+     * Set the component name slug
+     *
+     * @param string $slug Component name slug
+     *
+     * @return AbstractNode Self reference
+     */
+    public function setSlug(string $slug): AbstractNode
+    {
+        $this->slug = $slug;
 
         return $this;
     }

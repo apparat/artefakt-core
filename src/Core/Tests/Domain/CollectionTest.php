@@ -53,13 +53,13 @@ class CollectionTest extends AbstractTestBase
      */
     public function testCollection()
     {
-        $collection = new Collection('Collection');
+        $collection = new Collection('Collection', 'collection');
         $this->assertInstanceOf(Collection::class, $collection);
         $this->assertEquals(0, count($collection));
 
         $components = [
-            new Component('Node A'),
-            new Component('Node B'),
+            new Component('Node A', 'node-a'),
+            new Component('Node B', 'node-b'),
         ];
 
         // Add a first component

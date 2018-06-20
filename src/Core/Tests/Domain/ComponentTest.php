@@ -52,10 +52,13 @@ class ComponentTest extends AbstractTestBase
      */
     public function testComponent()
     {
-        $componentName = 'component'.rand();
-        $component     = new Component($componentName);
+        $componentName = 'component '.rand();
+        $componentSlug = preg_replace('/[^a-z\d]/', '-', $componentName);
+        $component     = new Component($componentName, $componentSlug);
         $this->assertInstanceOf(Component::class, $component);
         $this->assertEquals($componentName, $component->getName());
         $this->assertEquals($componentName.'set', $component->setName($componentName.'set')->getName());
+        $this->assertEquals($componentSlug, $component->getSlug());
+        $this->assertEquals($componentSlug.'set', $component->setSlug($componentSlug.'set')->getSlug());
     }
 }
