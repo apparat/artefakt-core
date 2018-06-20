@@ -37,6 +37,7 @@
 namespace Artefakt\Core\Domain\Model;
 
 use Artefakt\Core\Domain\Contract\ComponentInterface;
+use Artefakt\Core\Domain\Model\Traits\NodeTrait;
 
 /**
  * Component
@@ -47,33 +48,7 @@ use Artefakt\Core\Domain\Contract\ComponentInterface;
 class Component implements ComponentInterface
 {
     /**
-     * Component name
-     *
-     * @var string
+     * Use Node methods
      */
-    protected $name;
-
-    /**
-     * Get the component name
-     *
-     * @return string Component name
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set the component name
-     *
-     * @param string $name Component name
-     *
-     * @return ComponentInterface Self reference
-     */
-    public function setName(string $name): ComponentInterface
-    {
-        $this->name = $name;
-
-        return $this;
-    }
+    use NodeTrait;
 }

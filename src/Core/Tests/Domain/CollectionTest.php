@@ -5,16 +5,16 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Domain\Contract
- * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @subpackage Artefakt\Core\Tests\Domain
+ * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
 /***********************************************************************************
  *  The MIT License (MIT)
  *
- *  Copyright © 2018 tollwerk GmbH <info@tollwerk.de>
+ *  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy of
  *  this software and associated documentation files (the "Software"), to deal in
@@ -34,15 +34,44 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Domain\Contract;
+namespace Artefakt\Core\Tests\Domain;
+
+use Artefakt\Core\Domain\Model\Collection;
+use Artefakt\Core\Domain\Model\Component;
+use Artefakt\Core\Tests\AbstractTestBase;
 
 /**
- * Component Interface
+ * Collection2 tests
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Domain\Contract
+ * @subpackage Artefakt\Core\Tests\Domain
  */
-interface ComponentInterface extends AbstractNodeInterface
+class CollectionTest extends AbstractTestBase
 {
+    /**
+     * Test the collection
+     */
+    public function testCollection()
+    {
+        $collection = new Collection();
+        $this->assertInstanceOf(Collection::class, $collection);
+        $this->assertEquals(0, count($collection));
+
+        // Add a first component
+        $component1 = new Component();
+        $collection->attach($component1);
+        $this->assertEquals(1, count($collection));
+        $this->assertTrue($collection->contains($component1));
+
+//        // Add a second component via array access
+//        $collection->attach(new Component());
+//        $this->assertEquals(2, count($collection));
+//
+//        // Iterate through all components
+//        foreach ($collection as $index => $component) {
+//            $this->assertInstanceOf(Component::class, $component);
+//            $this->assertEquals($collection[$index], $component);
+//        }
+    }
 
 }

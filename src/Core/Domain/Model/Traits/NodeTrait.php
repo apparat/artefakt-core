@@ -5,16 +5,16 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Domain\Contract
- * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @subpackage Artefakt\Core\Domain\Model\Traits
+ * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
 /***********************************************************************************
  *  The MIT License (MIT)
  *
- *  Copyright © 2018 tollwerk GmbH <info@tollwerk.de>
+ *  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy of
  *  this software and associated documentation files (the "Software"), to deal in
@@ -34,15 +34,46 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Domain\Contract;
+namespace Artefakt\Core\Domain\Model\Traits;
+
+use Artefakt\Core\Domain\Contract\AbstractNodeInterface;
+use Artefakt\Core\Domain\Contract\ComponentInterface;
 
 /**
- * Component Interface
+ * Node Trait
  *
- * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Domain\Contract
+ * @package Artefakt\Core\Domain\Model\Traits
  */
-interface ComponentInterface extends AbstractNodeInterface
+trait NodeTrait
 {
+    /**
+     * Component name
+     *
+     * @var string
+     */
+    protected $name;
 
+    /**
+     * Get the component name
+     *
+     * @return string Component name
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set the component name
+     *
+     * @param string $name Component name
+     *
+     * @return AbstractNodeInterface Self reference
+     */
+    public function setName(string $name): AbstractNodeInterface
+    {
+        $this->name = $name;
+
+        return $this;
+    }
 }

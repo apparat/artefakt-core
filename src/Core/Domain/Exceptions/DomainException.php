@@ -5,16 +5,16 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Domain\Contract
- * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @subpackage Artefakt\Core\Domain\Exceptions
+ * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
 /***********************************************************************************
  *  The MIT License (MIT)
  *
- *  Copyright © 2018 tollwerk GmbH <info@tollwerk.de>
+ *  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy of
  *  this software and associated documentation files (the "Software"), to deal in
@@ -34,15 +34,28 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Domain\Contract;
+namespace Artefakt\Core\Domain\Exceptions;
+
+use Artefakt\Core\Domain\Contract\ExceptionInterface;
 
 /**
- * Component Interface
+ * Domain Exception
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Domain\Contract
+ * @subpackage Artefakt\Core\Domain\Exceptions
  */
-interface ComponentInterface extends AbstractNodeInterface
+class DomainException extends \DomainException implements ExceptionInterface
 {
-
+    /**
+     * Called collection offsetSet
+     *
+     * @var string
+     */
+    const CALLED_COLLECTION_OFFSETSET_STR = 'Use Collection::attach() instead of Collection::offsetSet()';
+    /**
+     * Called collection offsetSet
+     *
+     * @var string
+     */
+    const CALLED_COLLECTION_OFFSETSET = 1529438444;
 }
