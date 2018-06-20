@@ -46,8 +46,8 @@ Copyright © 2018 [Joschi Kuphal][author-url] / joschi@kuphal.net. Licensed unde
 [coveralls-url]: https://coveralls.io/github/apparat/artefakt-core?branch=master
 [scrutinizer-image]: https://scrutinizer-ci.com/g/apparat/artefakt-core/badges/quality-score.png?b=master
 [scrutinizer-url]: https://scrutinizer-ci.com/g/apparat/artefakt-core/?branch=master
-[codeclimate-image]: https://scrutinizer-ci.com/g/apparat/artefakt-core/badges/quality-score.png?b=master
-[codeclimate-url]: https://scrutinizer-ci.com/g/apparat/artefakt-core/?branch=master
+[codeclimate-image]: https://lima.codeclimate.com/github/apparat/artefakt-core/badges/gpa.svg
+[codeclimate-url]: https://lima.codeclimate.com/github/apparat/artefakt-core
 [readthedocs-image]: https://readthedocs.org/projects/apparat-artefakt-core/badge/?version=latest
 [readthedocs-url]: http://apparat-artefakt-core.readthedocs.io/en/latest/?badge=latest
 [clear-architecture-image]: https://img.shields.io/badge/Clear%20Architecture-%E2%9C%94-brightgreen.svg
