@@ -147,7 +147,7 @@ class Collection extends AbstractNode implements CollectionInterface
     protected function update(): void
     {
         uasort($this->nodes, [$this, 'sortByNodeName']);
-        $this->keys    = array_keys($this->nodes);
+        $this->keys    = array_map('strval', array_keys($this->nodes));
         $this->pointer = 0;
     }
 

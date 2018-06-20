@@ -36,7 +36,6 @@
 
 namespace Artefakt\Core\Tests\Domain;
 
-use Artefakt\Core\Domain\Contract\AbstractNodeInterface;
 use Artefakt\Core\Domain\Model\Collection;
 use Artefakt\Core\Domain\Model\Component;
 use Artefakt\Core\Tests\AbstractTestBase;
@@ -77,10 +76,10 @@ class CollectionTest extends AbstractTestBase
             $this->assertTrue(is_int($index));
             $this->assertInstanceOf(Component::class, $component);
             $this->assertEquals(array_shift($components), $component);
-        }
 
-        if ($component instanceof AbstractNodeInterface) {
-            $this->assertEquals(1, count($collection->detach($component)));
+            if ($index == 1) {
+                $this->assertEquals(1, count($collection->detach($component)));
+            }
         }
     }
 }
