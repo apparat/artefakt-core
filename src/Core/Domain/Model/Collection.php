@@ -38,7 +38,6 @@ namespace Artefakt\Core\Domain\Model;
 
 use Artefakt\Core\Domain\Contract\AbstractNodeInterface;
 use Artefakt\Core\Domain\Contract\CollectionInterface;
-use Artefakt\Core\Domain\Model\Traits\NodeTrait;
 
 /**
  * Component Collection
@@ -46,12 +45,8 @@ use Artefakt\Core\Domain\Model\Traits\NodeTrait;
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Domain\Model
  */
-class Collection implements CollectionInterface
+class Collection extends AbstractNode implements CollectionInterface
 {
-    /**
-     * Use Node methods
-     */
-    use NodeTrait;
     /**
      * Nodes
      *
@@ -166,7 +161,7 @@ class Collection implements CollectionInterface
     public function detach(AbstractNodeInterface $node): CollectionInterface
     {
         unset($this->nodes[spl_object_hash($node)]);
-        $this->detach();
+        $this->update();
 
         return $this;
     }

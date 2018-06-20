@@ -52,10 +52,10 @@ class ComponentTest extends AbstractTestBase
      */
     public function testComponent()
     {
-        $component = new Component();
-        $this->assertInstanceOf(Component::class, $component);
-
         $componentName = 'component'.rand();
-        $this->assertEquals($componentName, $component->setName($componentName)->getName());
+        $component     = new Component($componentName);
+        $this->assertInstanceOf(Component::class, $component);
+        $this->assertEquals($componentName, $component->getName());
+        $this->assertEquals($componentName.'set', $component->setName($componentName.'set')->getName());
     }
 }

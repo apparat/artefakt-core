@@ -37,7 +37,6 @@
 namespace Artefakt\Core\Domain\Model\Traits;
 
 use Artefakt\Core\Domain\Contract\AbstractNodeInterface;
-use Artefakt\Core\Domain\Contract\ComponentInterface;
 
 /**
  * Node Trait
@@ -54,6 +53,16 @@ trait NodeTrait
     protected $name;
 
     /**
+     * Node constructor
+     *
+     * @param string $name Node name
+     */
+    public function __construct(string $name)
+    {
+        $this->setName($name);
+    }
+
+    /**
      * Get the component name
      *
      * @return string Component name
@@ -68,7 +77,7 @@ trait NodeTrait
      *
      * @param string $name Component name
      *
-     * @return AbstractNodeInterface Self reference
+     * @return $this Self reference
      */
     public function setName(string $name): AbstractNodeInterface
     {

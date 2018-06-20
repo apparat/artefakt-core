@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Tests\Domain
+ * @subpackage Artefakt\Core\Domain\Model
  * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,51 +34,21 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Tests\Domain;
+namespace Artefakt\Core\Domain\Model;
 
-use Artefakt\Core\Domain\Model\Collection;
-use Artefakt\Core\Domain\Model\Component;
-use Artefakt\Core\Tests\AbstractTestBase;
+use Artefakt\Core\Domain\Contract\AbstractNodeInterface;
+use Artefakt\Core\Domain\Model\Traits\NodeTrait;
 
 /**
- * Collection2 tests
+ * Abstract Node
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Tests\Domain
+ * @subpackage Artefakt\Core\Domain\Model
  */
-class CollectionTest extends AbstractTestBase
+abstract class AbstractNode implements AbstractNodeInterface
 {
     /**
-     * Test the collection
+     * Use Node methods
      */
-    public function testCollection()
-    {
-        $collection = new Collection('Collection');
-        $this->assertInstanceOf(Collection::class, $collection);
-        $this->assertEquals(0, count($collection));
-
-        $components = [
-            new Component('Node A'),
-            new Component('Node B'),
-        ];
-
-        // Add a first component
-        $collection->attach($components[1]);
-        $this->assertEquals(1, count($collection));
-        $this->assertTrue($collection->contains($components[1]));
-
-        // Add a second component via array access
-        $collection->attach($components[0]);
-        $this->assertEquals(2, count($collection));
-
-        // Iterate through all components
-        foreach ($collection as $index => $component) {
-            $this->assertTrue(is_int($index));
-            $this->assertInstanceOf(Component::class, $component);
-            $this->assertEquals(array_shift($components), $component);
-        }
-
-        $this->assertEquals(1, count($collection->detach($component)));
-    }
-
+    use NodeTrait;
 }

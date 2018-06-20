@@ -37,7 +37,6 @@
 namespace Artefakt\Core\Domain\Model;
 
 use Artefakt\Core\Domain\Contract\ComponentInterface;
-use Artefakt\Core\Domain\Model\Traits\NodeTrait;
 
 /**
  * Component
@@ -45,10 +44,6 @@ use Artefakt\Core\Domain\Model\Traits\NodeTrait;
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Domain\Model
  */
-class Component implements ComponentInterface
+class Component extends AbstractNode implements ComponentInterface
 {
-    /**
-     * Use Node methods
-     */
-    use NodeTrait;
 }
