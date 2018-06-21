@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Component",
+    "description": "A design component description as used by the Artefakt Pattern Library Tool",
+    "type": "object",
+    "properties": {
+        "name": {
+            "description": "Name of the component",
+            "type": "string"
+        }
+    },
+    "required": [
+        "name"
+    ]
+}
