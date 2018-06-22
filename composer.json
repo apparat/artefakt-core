@@ -54,7 +54,7 @@
     },
     "extra": {
         "artefakt-command-plugins": [
-            "Artefakt\\Core\\Infrastructure\\Command\\SetupCommand"
+            "Artefakt\\Core\\Infrastructure\\Command\\InitializeCommand"
         ]
     }
 }
