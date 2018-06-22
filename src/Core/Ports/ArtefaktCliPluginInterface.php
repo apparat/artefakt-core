@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure\Command
+ * @subpackage Artefakt\Core\Ports
  * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,42 +34,15 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Infrastructure\Command;
-
-use Artefakt\Artefakt\Ports\ArtefaktCommandPluginInterface;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+namespace Artefakt\Core\Ports;
 
 /**
- * Artefakt Setup CLI command
+ * Artefakt CLI Command Plugin Interface
  *
- * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure
+ * @package    Artefakt\Artefakt
+ * @subpackage Artefakt\Artefakt\Ports
  */
-class InitializeCommand extends Command implements ArtefaktCommandPluginInterface
+interface ArtefaktCliPluginInterface
 {
-    /**
-     * Configure the command
-     */
-    protected function configure()
-    {
-        $this->setName('init')
-             ->setDescription('Create and initialize a new pattern library')
-             ->setHelp('This command creates the pattern library directories and runs the necessary initialization steps')
-             ->addArgument('web-dir', InputArgument::OPTIONAL, 'The public pattern library web directory', 'public');
-    }
 
-    /**
-     * Executes the current command
-     *
-     * @return null|int Status
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
-        $output->write('<info>Successfully set up!</info>');
-
-        return 0;
-    }
 }

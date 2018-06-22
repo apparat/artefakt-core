@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+
+exit(call_user_func(function () {
+    define('ARTEFAKT_START', microtime(true));
+
+    // Require the autoloader
+    $directory = __FILE__;
+    while($directory && !is_dir($directory.DIRECTORY_SEPARATOR.'vendor')) {
+        $directory = dirname($directory);
+    }
+    $vendorDir = $directory.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR;
+    require $vendorDir.'autoload.php';
+
+    $artefakt = new \Artefakt\Core\Infrastructure\Cli\App(
+        glob($vendorDir.'*'.DIRECTORY_SEPARATOR.'*'.DIRECTORY_SEPARATOR.'composer.json')
+    );
+
+    return $artefakt->run();
+}));
+
