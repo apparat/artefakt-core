@@ -28,8 +28,10 @@
     },
     "require": {
         "php": ">=7.2",
+        "ext-json": "*",
         "cocur/slugify": "^3.1",
         "justinrainbow/json-schema": "^5.2",
+        "symfony/console": "^4.1",
         "vlucas/phpdotenv": "^2.4"
     },
     "autoload": {
@@ -46,9 +48,13 @@
     },
     "require-dev": {
         "clue/graph-composer": "dev-master",
-        "codeclimate/php-test-reporter": "^0.4.4",
         "php-coveralls/php-coveralls": "^2.1",
         "phpunit/phpunit": "^7.2",
         "squizlabs/php_codesniffer": "^3.3"
+    },
+    "extra": {
+        "artefakt-command-plugins": [
+            "Artefakt\\Core\\Infrastructure\\Command\\SetupCommand"
+        ]
     }
 }
