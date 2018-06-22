@@ -36,7 +36,7 @@
 
 namespace Artefakt\Core\Infrastructure\Command;
 
-use Artefakt\Artefakt\Ports\ArtefaktCommandPluginInterface;
+use Artefakt\Core\Ports\ArtefaktCliPluginInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -48,7 +48,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Infrastructure
  */
-class Initialize extends Command implements ArtefaktCommandPluginInterface
+class Initialize extends Command implements ArtefaktCliPluginInterface
 {
     /**
      * Configure the command
