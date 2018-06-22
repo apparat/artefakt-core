@@ -84,7 +84,6 @@ class App extends Application
 
         $packageDescriptorJson   = file_get_contents($packageDescriptor);
         $packageDescriptorObject = json_decode($packageDescriptorJson);
-        print_r($packageDescriptorObject);
         if (isset($packageDescriptorObject->extra->{'artefakt-command-plugins'})) {
             array_map(
                 [$this, 'registerCommandPlugin'],
