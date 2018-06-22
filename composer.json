@@ -18,8 +18,7 @@
     "issues": "https://github.com/apparat/artefakt-core/issues"
   },
   "config": {
-    "sort-packages": true,
-    "bin-dir": "./"
+    "sort-packages": true
   },
   "bin": [
     "src/Core/Infrastructure/Cli/artefakt"
