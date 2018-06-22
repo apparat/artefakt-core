@@ -3,8 +3,7 @@ php:
   - 7.2
   - hhvm
 env:
-  - APP_ENV=development
-  - CC_TEST_REPORTER_ID=2933da27d7609980f72d817ecab7abc4d0495e9753ba4f8d8de5e6e184031c56
+  - APP_ENV=development CC_TEST_REPORTER_ID=2933da27d7609980f72d817ecab7abc4d0495e9753ba4f8d8de5e6e184031c56
 matrix:
   allow_failures:
     - php: hhvm
