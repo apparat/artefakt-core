@@ -29,7 +29,8 @@
     "require": {
         "php": ">=7.2",
         "cocur/slugify": "^3.1",
-        "justinrainbow/json-schema": "^5.2"
+        "justinrainbow/json-schema": "^5.2",
+        "vlucas/phpdotenv": "^2.4"
     },
     "autoload": {
         "psr-4": {
