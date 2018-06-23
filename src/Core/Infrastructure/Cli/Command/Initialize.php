@@ -66,10 +66,10 @@ class Initialize extends Command implements CommandPluginInterface
                  'The directory where component descriptions are stored',
                  Environment::$defaultDirectories[Environment::COMPONENTS]
              )->addOption(
-                 'document-root',
-                 null,
-                 InputArgument::OPTIONAL,
-                 'The directory where documentation resources are stored',
+                'document-root',
+                null,
+                InputArgument::OPTIONAL,
+                'The directory where documentation resources are stored',
                 Environment::$defaultDirectories[Environment::DOCUMENTS]
             )->addOption(
                 'cache-root',
@@ -87,7 +87,18 @@ class Initialize extends Command implements CommandPluginInterface
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->write('<info>Successfully set up: '.Environment::get(Environment::CACHE).'!</info>');
+        try {
+            Environment::initialize(
+                $input->getOption('component-root'),
+                $input->getOption('document-root'),
+                $input->getOption('cache-root')
+            );
+            $output->write('<info>Project initialization successful</info>');
+        } catch (\ErrorException $e) {
+            $output->write('<error>Error: '.$e->getMessage().'</error>');
+
+            return $e->getCode();
+        }
 
         return 0;
     }

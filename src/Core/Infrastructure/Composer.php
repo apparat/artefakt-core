@@ -54,14 +54,14 @@ class Composer
     public static function postCreateProjectCmd(Event $event)
     {
         $directories = [
-            'component' => Environment::$defaultDirectories[Environment::COMPONENTS],
-            'docs'      => Environment::$defaultDirectories[Environment::DOCUMENTS],
-            'cache'     => Environment::$defaultDirectories[Environment::CACHE],
+            'components' => Environment::$defaultDirectories[Environment::COMPONENTS],
+            'docs'       => Environment::$defaultDirectories[Environment::DOCUMENTS],
+            'cache'      => Environment::$defaultDirectories[Environment::CACHE],
         ];
         $extra       = $event->getComposer()->getPackage()->getExtra();
         if (isset($extra['apparat/artefakt'])) {
             $directories = array_merge($directories, (array)$extra['apparat/artefakt']);
         }
-        print_r($directories);
+        Environment::initialize($directories['components'], $directories['docs'], $directories['cache']);
     }
 }

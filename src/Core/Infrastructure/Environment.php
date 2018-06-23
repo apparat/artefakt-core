@@ -73,12 +73,6 @@ class Environment
      */
     const CACHE = 'ARTEFAKT_CACHE';
     /**
-     * Instance
-     *
-     * @var Environment
-     */
-    protected static $instance = null;
-    /**
      * Default directories
      *
      * @var string[]
@@ -88,6 +82,12 @@ class Environment
         self::DOCUMENTS  => 'docs',
         self::CACHE      => 'cache'
     ];
+    /**
+     * Instance
+     *
+     * @var Environment
+     */
+    protected static $instance = null;
     /**
      * Default environment variables
      *
@@ -180,5 +180,17 @@ class Environment
         }
 
         return self::$instance;
+    }
+
+    /**
+     * Initialize the environment
+     *
+     * @param string $components Component directory
+     * @param string $docs       Document directory
+     * @param string $cache      Cache directory
+     */
+    public static function initialize(string $components, string $docs, string $cache): void
+    {
+        print_r(func_get_args());
     }
 }
