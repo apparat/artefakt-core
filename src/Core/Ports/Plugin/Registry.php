@@ -123,10 +123,10 @@ class Registry
 
         $packageDescriptorJson   = file_get_contents($packageDescriptor);
         $packageDescriptorObject = json_decode($packageDescriptorJson);
-        if (isset($packageDescriptorObject->extra->artefakt)) {
+        if (isset($packageDescriptorObject->extra->{'apparat/artefakt'})) {
             array_map(
                 [$this, 'processPlugins'],
-                (array)$packageDescriptorObject->extra->artefakt
+                (array)$packageDescriptorObject->extra->{'apparat/artefakt'}
             );
         }
     }

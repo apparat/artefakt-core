@@ -1,68 +1,68 @@
 {
-  "name": "apparat/artefakt-core",
-  "description": "Artefakt Pattern Library Core",
-  "homepage": "https://apparat.tools/artefakt",
-  "minimum-stability": "RC",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Joschi Kuphal",
-      "email": "joschi@kuphal.net",
-      "homepage": "https://jkphl.is",
-      "role": "Developer"
+    "name": "apparat/artefakt-core",
+    "description": "Artefakt Pattern Library Core",
+    "homepage": "https://apparat.tools/artefakt",
+    "minimum-stability": "RC",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Joschi Kuphal",
+            "email": "joschi@kuphal.net",
+            "homepage": "https://jkphl.is",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "joschi@kuphal.net",
+        "source": "https://github.com/apparat/artefakt-core",
+        "issues": "https://github.com/apparat/artefakt-core/issues"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "bin": [
+        "src/Core/Ports/artefakt"
+    ],
+    "repositories": {
+        "graph-composer": {
+            "type": "git",
+            "url": "https://github.com/jkphl/graph-composer"
+        }
+    },
+    "require": {
+        "php": ">=7.2",
+        "ext-json": "*",
+        "cocur/slugify": "^3.1",
+        "justinrainbow/json-schema": "^5.2",
+        "makbari/dot-env-editor": "^0.1.4",
+        "symfony/console": "^4.1",
+        "vlucas/phpdotenv": "^2.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Artefakt\\": "src/"
+        }
+    },
+    "scripts": {
+        "phpunit": "vendor/bin/phpunit --configuration phpunit.xml.dist",
+        "depgraph": "vendor/bin/graph-composer --no-dev export . doc/dependencies.svg",
+        "check-style": "vendor/bin/phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src",
+        "fix-style": "vendor/bin/phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src",
+        "test": "@phpunit"
+    },
+    "require-dev": {
+        "clue/graph-composer": "dev-master",
+        "php-coveralls/php-coveralls": "^2.1",
+        "phpunit/phpunit": "^7.2",
+        "squizlabs/php_codesniffer": "^3.3"
+    },
+    "extra": {
+        "apparat/artefakt": {
+            "plugins": {
+                "command": [
+                    "Artefakt\\Core\\Infrastructure\\Cli\\Command\\Initialize"
+                ]
+            }
+        }
     }
-  ],
-  "support": {
-    "email": "joschi@kuphal.net",
-    "source": "https://github.com/apparat/artefakt-core",
-    "issues": "https://github.com/apparat/artefakt-core/issues"
-  },
-  "config": {
-    "sort-packages": true
-  },
-  "bin": [
-    "src/Core/Ports/artefakt"
-  ],
-  "repositories": {
-    "graph-composer": {
-      "type": "git",
-      "url": "https://github.com/jkphl/graph-composer"
-    }
-  },
-  "require": {
-    "php": ">=7.2",
-    "ext-json": "*",
-    "cocur/slugify": "^3.1",
-    "justinrainbow/json-schema": "^5.2",
-    "makbari/dot-env-editor": "^0.1.4",
-    "symfony/console": "^4.1",
-    "vlucas/phpdotenv": "^2.4"
-  },
-  "autoload": {
-    "psr-4": {
-      "Artefakt\\": "src/"
-    }
-  },
-  "scripts": {
-    "phpunit": "vendor/bin/phpunit --configuration phpunit.xml.dist",
-    "depgraph": "vendor/bin/graph-composer --no-dev export . doc/dependencies.svg",
-    "check-style": "vendor/bin/phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src",
-    "fix-style": "vendor/bin/phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src",
-    "test": "@phpunit"
-  },
-  "require-dev": {
-    "clue/graph-composer": "dev-master",
-    "php-coveralls/php-coveralls": "^2.1",
-    "phpunit/phpunit": "^7.2",
-    "squizlabs/php_codesniffer": "^3.3"
-  },
-  "extra": {
-    "artefakt": {
-      "plugins": {
-        "command": [
-          "Artefakt\\Core\\Infrastructure\\Cli\\Command\\Initialize"
-        ]
-      }
-    }
-  }
 }

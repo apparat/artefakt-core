@@ -1,6 +1,6 @@
 {
   "extra": {
-    "artefakt": {
+    "apparat/artefakt": {
       "plugins": {
         "command": [
           "Artefakt\\Core\\Tests\\Fixture\\Mock\\Plugin\\Command",
