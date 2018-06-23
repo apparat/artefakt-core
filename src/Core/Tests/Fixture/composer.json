@@ -1,0 +1,16 @@
+{
+  "extra": {
+    "artefakt": {
+      "plugins": {
+        "command": [
+          "Artefakt\\Core\\Tests\\Fixture\\Mock\\Plugin\\Command",
+          "Non\\Existing\\Plugin\\Command"
+        ],
+        "other": {
+          "key": "Artefakt\\Core\\Tests\\Fixture\\Mock\\Plugin\\Command"
+        },
+        "invalid": true
+      }
+    }
+  }
+}

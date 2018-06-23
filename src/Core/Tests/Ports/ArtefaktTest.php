@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure\Plugin\Validator
+ * @subpackage Artefakt\Core\Tests\Ports
  * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,44 +34,26 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Infrastructure\Plugin\Validator;
+namespace Artefakt\Core\Tests\Ports;
 
-use Artefakt\Core\Infrastructure\Contract\PluginInterface;
-use Artefakt\Core\Infrastructure\Contract\PluginValidatorInterface;
+use Artefakt\Core\Infrastructure\Cli\App;
+use Artefakt\Core\Ports\Artefakt;
+use Artefakt\Core\Tests\AbstractTestBase;
 
 /**
- * Abstract Plugin validator
+ * Artefakt Facade Tests
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure\Plugin\Validator
+ * @subpackage Artefakt\Core\Tests\Ports
  */
-abstract class AbstractValidator implements PluginValidatorInterface
+class ArtefaktTest extends AbstractTestBase
 {
     /**
-     * Reflection class
-     *
-     * @var \ReflectionClass
+     * Test the command line Interface
      */
-    protected $reflection = null;
-
-    /**
-     * Validate a plugin
-     *
-     * @param string $plugin Plugin class name
-     *
-     * @return bool Plugin class is valid
-     */
-    public function validate(string $plugin): bool
+    public function testCli()
     {
-        try {
-            $this->reflection = new \ReflectionClass($plugin);
-            if ($this->reflection->implementsInterface(PluginInterface::class)) {
-                return true;
-            }
-        } catch (\Exception $e) {
-            // Skip
-        }
-
-        return false;
+        $cli = Artefakt::cli();
+        $this->assertInstanceOf(App::class, $cli);
     }
 }

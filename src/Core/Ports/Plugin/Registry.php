@@ -36,7 +36,6 @@
 
 namespace Artefakt\Core\Ports\Plugin;
 
-use Artefakt\Core\Infrastructure\Contract\PluginValidatorInterface;
 use Artefakt\Core\Infrastructure\Plugin\Validator\CommandValidator;
 
 /**
@@ -79,7 +78,7 @@ class Registry
      *
      * @param string[] $packageDescriptors Package descriptors
      */
-    public function __construct(array $packageDescriptors)
+    protected function __construct(array $packageDescriptors)
     {
         array_map([$this, 'processPluginPackageDescriptors'], $packageDescriptors);
     }
@@ -88,16 +87,12 @@ class Registry
      * Bootstrap a registry instance
      *
      * @param string[] $packageDescriptors Package descriptors
-     *
-     * @return Registry Registry instance
      */
-    public static function bootstrap(array $packageDescriptors = []): Registry
+    public static function bootstrap(array $packageDescriptors = []): void
     {
-        if (self::$instance === null) {
+        if ((self::$instance === null) || func_num_args()) {
             self::$instance = new static($packageDescriptors);
         }
-
-        return self::$instance;
     }
 
     /**
@@ -198,14 +193,6 @@ class Registry
      */
     protected function isValidPluginOfType(string $pluginType, string $plugin): bool
     {
-        // If there's a validator for this plugin type
-        if (isset(self::$pluginValidators[$pluginType])) {
-            /** @var PluginValidatorInterface $pluginValidator */
-            $pluginValidator = new self::$pluginValidators[$pluginType];
-
-            return $pluginValidator->validate($plugin);
-        }
-
-        return true;
+        return empty(self::$pluginValidators[$pluginType]) || (new self::$pluginValidators[$pluginType])->validate($plugin);
     }
 }

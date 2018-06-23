@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure\Plugin\Validator
+ * @subpackage Artefakt\Core\Tests\Fixture\Mock\Plugin
  * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,44 +34,17 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Infrastructure\Plugin\Validator;
+namespace Artefakt\Core\Tests\Fixture\Mock\Plugin;
 
-use Artefakt\Core\Infrastructure\Contract\PluginInterface;
-use Artefakt\Core\Infrastructure\Contract\PluginValidatorInterface;
+use Artefakt\Core\Ports\Plugin\Contract\CommandPluginInterface;
 
 /**
- * Abstract Plugin validator
+ * Command Plugin Mock
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure\Plugin\Validator
+ * @subpackage Artefakt\Core\Tests\Fixture\Mock\Plugin
  */
-abstract class AbstractValidator implements PluginValidatorInterface
+class Command extends \Symfony\Component\Console\Command\Command implements CommandPluginInterface
 {
-    /**
-     * Reflection class
-     *
-     * @var \ReflectionClass
-     */
-    protected $reflection = null;
 
-    /**
-     * Validate a plugin
-     *
-     * @param string $plugin Plugin class name
-     *
-     * @return bool Plugin class is valid
-     */
-    public function validate(string $plugin): bool
-    {
-        try {
-            $this->reflection = new \ReflectionClass($plugin);
-            if ($this->reflection->implementsInterface(PluginInterface::class)) {
-                return true;
-            }
-        } catch (\Exception $e) {
-            // Skip
-        }
-
-        return false;
-    }
 }

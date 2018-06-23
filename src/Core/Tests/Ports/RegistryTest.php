@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure\Plugin\Validator
+ * @subpackage Artefakt\Core\Tests\Ports
  * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,44 +34,33 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Infrastructure\Plugin\Validator;
+namespace Artefakt\Core\Tests\Ports;
 
-use Artefakt\Core\Infrastructure\Contract\PluginInterface;
-use Artefakt\Core\Infrastructure\Contract\PluginValidatorInterface;
+use Artefakt\Core\Ports\Plugin\Registry;
+use Artefakt\Core\Tests\AbstractTestBase;
+use Artefakt\Core\Tests\Fixture\Mock\Plugin\Command;
 
 /**
- * Abstract Plugin validator
+ * Registry Tests
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure\Plugin\Validator
+ * @subpackage Artefakt\Core\Tests\Ports
  */
-abstract class AbstractValidator implements PluginValidatorInterface
+class RegistryTest extends AbstractTestBase
 {
     /**
-     * Reflection class
-     *
-     * @var \ReflectionClass
+     * Test the registry
      */
-    protected $reflection = null;
-
-    /**
-     * Validate a plugin
-     *
-     * @param string $plugin Plugin class name
-     *
-     * @return bool Plugin class is valid
-     */
-    public function validate(string $plugin): bool
+    public function testRegistry()
     {
-        try {
-            $this->reflection = new \ReflectionClass($plugin);
-            if ($this->reflection->implementsInterface(PluginInterface::class)) {
-                return true;
-            }
-        } catch (\Exception $e) {
-            // Skip
-        }
-
-        return false;
+        Registry::bootstrap([
+            dirname(__DIR__).DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'composer.json',
+            dirname(__DIR__).DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'composer.invalid.json',
+            'invalid'
+        ]);
+        $plugins = Registry::plugins(Registry::COMMAND_PLUGIN);
+        $this->assertTrue(is_array($plugins));
+        $this->assertTrue(count($plugins) >= 1);
+        $this->assertTrue(in_array(Command::class, $plugins));
     }
 }
