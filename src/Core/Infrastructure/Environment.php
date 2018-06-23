@@ -83,7 +83,7 @@ class Environment
      *
      * @var string[]
      */
-    protected static $defaultDirectories = [
+    public static $defaultDirectories = [
         self::COMPONENTS => 'components',
         self::DOCUMENTS  => 'docs',
         self::CACHE      => 'cache'

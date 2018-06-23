@@ -51,9 +51,17 @@ class Composer
      *
      * @param Event $event Event
      */
-    public function postCreateProjectCmd(Event $event)
+    public static function postCreateProjectCmd(Event $event)
     {
-        $extra = $event->getComposer()->getPackage()->getExtra();
-        print_r($extra);
+        $directories = [
+            'component' => Environment::$defaultDirectories[Environment::COMPONENTS],
+            'docs'      => Environment::$defaultDirectories[Environment::DOCUMENTS],
+            'cache'     => Environment::$defaultDirectories[Environment::CACHE],
+        ];
+        $extra       = $event->getComposer()->getPackage()->getExtra();
+        if (isset($extra['apparat/artefakt'])) {
+            $directories = array_merge($directories, (array)$extra['apparat/artefakt']);
+        }
+        print_r($directories);
     }
 }

@@ -59,12 +59,25 @@ class Initialize extends Command implements CommandPluginInterface
         $this->setName('app:init')
              ->setDescription('Create and initialize a new pattern library')
              ->setHelp('This command creates the pattern library directories and runs the necessary initialization steps')
-             ->addOption('component-root', null, InputArgument::OPTIONAL,
-                 'The directory where component descriptions are stored', 'components')
-             ->addOption('document-root', null, InputArgument::OPTIONAL,
-                 'The directory where documentation resources are stored', 'docs')
-             ->addOption('cache-root', null, InputArgument::OPTIONAL, 'The directory where cache resources are stored',
-                 'cache');
+             ->addOption(
+                 'component-root',
+                 null,
+                 InputArgument::OPTIONAL,
+                 'The directory where component descriptions are stored',
+                 Environment::$defaultDirectories[Environment::COMPONENTS]
+             )->addOption(
+                 'document-root',
+                 null,
+                 InputArgument::OPTIONAL,
+                 'The directory where documentation resources are stored',
+                Environment::$defaultDirectories[Environment::DOCUMENTS]
+            )->addOption(
+                'cache-root',
+                null,
+                InputArgument::OPTIONAL,
+                'The directory where cache resources are stored',
+                Environment::$defaultDirectories[Environment::CACHE]
+            );
     }
 
     /**
