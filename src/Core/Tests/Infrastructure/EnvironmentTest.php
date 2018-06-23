@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure\Command
+ * @subpackage Artefakt\Core\Tests\Infrastructure
  * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,48 +34,30 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Infrastructure\Cli\Command;
+namespace Artefakt\Core\Tests\Infrastructure;
 
 use Artefakt\Core\Infrastructure\Environment;
-use Artefakt\Core\Ports\ArtefaktCliPluginInterface;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Artefakt\Core\Tests\AbstractTestBase;
 
 /**
- * Artefakt Setup CLI command
+ * Environment Tests
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure
+ * @subpackage Artefakt\Core\Tests\Infrastructure
  */
-class Initialize extends Command implements ArtefaktCliPluginInterface
+class EnvironmentTest extends AbstractTestBase
 {
     /**
-     * Configure the command
-     */
-    protected function configure()
-    {
-        $this->setName('app:init')
-             ->setDescription('Create and initialize a new pattern library')
-             ->setHelp('This command creates the pattern library directories and runs the necessary initialization steps')
-             ->addOption('component-root', null, InputArgument::OPTIONAL,
-                 'The directory where component descriptions are stored', 'components')
-             ->addOption('document-root', null, InputArgument::OPTIONAL,
-                 'The directory where documentation resources are stored', 'docs')
-             ->addOption('cache-root', null, InputArgument::OPTIONAL, 'The directory where cache resources are stored',
-                 'cache');
-    }
-
-    /**
-     * Executes the current command
+     * Test the environment
      *
-     * @return null|int Status
+     * @expectedException \Artefakt\Core\Infrastructure\Exceptions\DomainException
+     * @expectedExceptionCode 1529739851
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    public function testEnvironment()
     {
-        $output->write('<info>Successfully set up: '.Environment::get(Environment::CACHE).'!</info>');
-
-        return 0;
+        $rootDirectory = dirname(dirname(dirname(dirname(__DIR__)))).DIRECTORY_SEPARATOR;
+        $this->assertEquals($rootDirectory, Environment::get(Environment::ROOT));
+        $this->assertEquals('default', Environment::get('unknown', 'default'));
+        Environment::get('invalid');
     }
 }
