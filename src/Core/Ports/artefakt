@@ -9,15 +9,9 @@ exit(call_user_func(function () {
     while ($directory && !is_dir($directory.DIRECTORY_SEPARATOR.'vendor')) {
         $directory = dirname($directory);
     }
-    $vendorDir = $directory.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR;
-    require $vendorDir.'autoload.php';
+    require $directory.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
 
-    $packageDescriptors = array_merge(
-        glob($directory.DIRECTORY_SEPARATOR.'composer.json'),
-        glob($vendorDir.'*'.DIRECTORY_SEPARATOR.'*'.DIRECTORY_SEPARATOR.'composer.json')
-    );
-    $artefakt           = new \Artefakt\Core\Infrastructure\Cli\App($packageDescriptors);
-
-    return $artefakt->run();
+    // Bootstrap Artefakt and return a CLI interface
+    \Artefakt\Core\Ports\Artefakt::cli()->run();
 }));
 

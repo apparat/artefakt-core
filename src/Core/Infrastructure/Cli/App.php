@@ -36,9 +36,8 @@
 
 namespace Artefakt\Core\Infrastructure\Cli;
 
-use Artefakt\Core\Ports\ArtefaktCliPluginInterface;
+use Artefakt\Core\Ports\Plugin\Registry;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 
 /**
@@ -63,57 +62,17 @@ class App extends Application
      *
      * @api
      */
-    public function __construct(array $packageDescriptors)
+    public function __construct()
     {
         parent::__construct('Artefakt Pattern Library CLI Tool');
-//        $this->setCatchExceptions(true);
-        array_map([$this, 'processPluginPackageDescriptors'], $packageDescriptors);
-    }
 
-    /**
-     * Process an installed package
-     *
-     * @param string $packageDescriptor Installed package
-     */
-    protected function processPluginPackageDescriptors(string $packageDescriptor)
-    {
-        // If the descriptor is not a valid file
-        if (!is_file($packageDescriptor)) {
-            return;
-        }
-
-        $packageDescriptorJson   = file_get_contents($packageDescriptor);
-        $packageDescriptorObject = json_decode($packageDescriptorJson);
-        if (isset($packageDescriptorObject->extra->{'artefakt-command-plugins'})) {
-            array_map(
-                [$this, 'registerCommandPlugin'],
-                (array)$packageDescriptorObject->extra->{'artefakt-command-plugins'}
-            );
-        }
-    }
-
-    /**
-     * Register a CLI command plugin class
-     *
-     * @param string $commandPluginClass Command plugin class
-     */
-    protected function registerCommandPlugin(string $commandPluginClass)
-    {
-        $commandPluginClass = trim($commandPluginClass);
-        if (!strlen($commandPluginClass) || !class_exists($commandPluginClass)) {
-            return;
-        }
-        try {
-            $commandPluginClassReflection = new \ReflectionClass($commandPluginClass);
-            if ($commandPluginClassReflection->implementsInterface(ArtefaktCliPluginInterface::class)
-                && ($commandPluginClassReflection->isSubclassOf(Command::class))
-            ) {
-                $this->add(new $commandPluginClass());
+        // Run through and register all known commands
+        foreach (Registry::plugins(Registry::COMMAND_PLUGIN) as $command) {
+            try {
+                $this->add(new $command());
+            } catch (ExceptionInterface $e) {
+                $this->errors[] = $e;
             }
-        } catch (\ReflectionException $e) {
-            // Skip
-        } catch (ExceptionInterface $e) {
-            $this->errors[] = $e;
         }
     }
 }

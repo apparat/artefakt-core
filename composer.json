@@ -57,8 +57,12 @@
     "squizlabs/php_codesniffer": "^3.3"
   },
   "extra": {
-    "artefakt-command-plugins": [
-      "Artefakt\\Core\\Infrastructure\\Cli\\Command\\Initialize"
-    ]
+    "artefakt": {
+      "plugins": {
+        "command": [
+          "Artefakt\\Core\\Infrastructure\\Cli\\Command\\Initialize"
+        ]
+      }
+    }
   }
 }

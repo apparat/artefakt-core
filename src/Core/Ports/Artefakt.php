@@ -36,13 +36,55 @@
 
 namespace Artefakt\Core\Ports;
 
-/**
- * Artefakt CLI Command Plugin Interface
- *
- * @package    Artefakt\Artefakt
- * @subpackage Artefakt\Artefakt\Ports
- */
-interface ArtefaktCliPluginInterface
-{
+use Artefakt\Core\Infrastructure\Cli\App;
+use Artefakt\Core\Infrastructure\Environment;
+use Artefakt\Core\Ports\Plugin\Registry;
 
+/**
+ * Artefakt Facade
+ *
+ * @package    Artefakt\Core
+ * @subpackage Artefakt\Core\Ports
+ */
+class Artefakt
+{
+    /**
+     * Application is bootstrapped
+     *
+     * @var bool
+     */
+    protected static $bootstrapped = false;
+
+    /**
+     * Bootstrap the application
+     *
+     * @api
+     */
+    public static function bootstrap(): void
+    {
+        if (!self::$bootstrapped) {
+
+            // Bootstrap the plugin registry
+            $rootDirectory      = Environment::get(Environment::ROOT);
+            $packageDescriptors = array_merge(
+                glob($rootDirectory.DIRECTORY_SEPARATOR.'composer.json'),
+                glob($rootDirectory.'*'.DIRECTORY_SEPARATOR.'*'.DIRECTORY_SEPARATOR.'composer.json')
+            );
+            Registry::bootstrap($packageDescriptors);
+            self::$bootstrapped = true;
+        }
+    }
+
+    /**
+     * Return a CLI application interface
+     *
+     * @return App CLI application interface
+     * @api
+     */
+    public static function cli(): App
+    {
+        self::bootstrap();
+
+        return new App();
+    }
 }

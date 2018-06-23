@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure\Command
+ * @subpackage Artefakt\Core\Infrastructure\Plugin\Validator
  * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,48 +34,46 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Infrastructure\Cli\Command;
+namespace Artefakt\Core\Infrastructure\Plugin\Validator;
 
-use Artefakt\Core\Infrastructure\Environment;
-use Artefakt\Core\Ports\Plugin\Contract\CommandPluginInterface;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Artefakt\Core\Infrastructure\Contract\PluginInterface;
+use Artefakt\Core\Infrastructure\Contract\PluginValidatorInterface;
 
 /**
- * Artefakt Setup CLI command
+ * Abstract Plugin validator
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure
+ * @subpackage Artefakt\Core\Infrastructure\Plugin\Validator
  */
-class Initialize extends Command implements CommandPluginInterface
+abstract class AbstractValidator implements PluginValidatorInterface
 {
     /**
-     * Configure the command
+     * Reflection class
+     *
+     * @var \ReflectionClass
      */
-    protected function configure()
-    {
-        $this->setName('app:init')
-             ->setDescription('Create and initialize a new pattern library')
-             ->setHelp('This command creates the pattern library directories and runs the necessary initialization steps')
-             ->addOption('component-root', null, InputArgument::OPTIONAL,
-                 'The directory where component descriptions are stored', 'components')
-             ->addOption('document-root', null, InputArgument::OPTIONAL,
-                 'The directory where documentation resources are stored', 'docs')
-             ->addOption('cache-root', null, InputArgument::OPTIONAL, 'The directory where cache resources are stored',
-                 'cache');
-    }
+    protected $reflection = null;
 
     /**
-     * Executes the current command
+     * Validate a plugin
      *
-     * @return null|int Status
+     * @param string $plugin Plugin class name
+     *
+     * @return bool Plugin class is valid
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    public function validate(string $plugin): bool
     {
-        $output->write('<info>Successfully set up: '.Environment::get(Environment::CACHE).'!</info>');
+        if (class_exists($plugin)) {
+            try {
+                $this->reflection = new \ReflectionClass($plugin);
+                if ($this->reflection->implementsInterface(PluginInterface::class)) {
+                    return true;
+                }
+            } catch (\Exception $e) {
+                // Skip
+            }
+        }
 
-        return 0;
+        return false;
     }
 }

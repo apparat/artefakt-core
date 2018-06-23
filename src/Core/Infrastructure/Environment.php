@@ -49,34 +49,6 @@ use Dotenv\Dotenv;
 class Environment
 {
     /**
-     * Instance
-     *
-     * @var Environment
-     */
-    protected static $instance = null;
-    /**
-     * Default environment variables
-     *
-     * @var array
-     */
-    protected $defaultEnv = [];
-    /**
-     * Environment variables
-     *
-     * @var array
-     */
-    protected $env = [];
-    /**
-     * Default directories
-     *
-     * @var string[]
-     */
-    protected static $defaultDirectories = [
-        self::COMPONENTS => 'components',
-        self::DOCUMENTS  => 'docs',
-        self::CACHE      => 'cache'
-    ];
-    /**
      * Root directory
      *
      * @var string
@@ -100,6 +72,34 @@ class Environment
      * @var string
      */
     const CACHE = 'ARTEFAKT_CACHE';
+    /**
+     * Instance
+     *
+     * @var Environment
+     */
+    protected static $instance = null;
+    /**
+     * Default directories
+     *
+     * @var string[]
+     */
+    protected static $defaultDirectories = [
+        self::COMPONENTS => 'components',
+        self::DOCUMENTS  => 'docs',
+        self::CACHE      => 'cache'
+    ];
+    /**
+     * Default environment variables
+     *
+     * @var array
+     */
+    protected $defaultEnv = [];
+    /**
+     * Environment variables
+     *
+     * @var array
+     */
+    protected $env = [];
 
     /**
      * Environment constructor
@@ -136,8 +136,6 @@ class Environment
             $dotenv = new Dotenv($this->defaultEnv[self::ROOT]);
             $dotenv->load();
         }
-
-        print_r(getenv());
     }
 
     /**
