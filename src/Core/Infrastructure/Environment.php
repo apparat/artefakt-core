@@ -39,6 +39,7 @@ namespace Artefakt\Core\Infrastructure;
 use Artefakt\Core\Infrastructure\Exceptions\DomainException;
 use Composer\Autoload\ClassLoader;
 use Dotenv\Dotenv;
+use Webmozart\PathUtil\Path;
 
 /**
  * Environment
