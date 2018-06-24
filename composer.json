@@ -61,7 +61,8 @@
         "apparat/artefakt": {
             "plugins": {
                 "command": [
-                    "Artefakt\\Core\\Infrastructure\\Cli\\Command\\Initialize"
+                    "Artefakt\\Core\\Infrastructure\\Cli\\Command\\Initialize",
+                    "Artefakt\\Core\\Infrastructure\\Cli\\Command\\Discover"
                 ]
             }
         }
