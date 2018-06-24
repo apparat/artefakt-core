@@ -36,6 +36,7 @@
 
 namespace Artefakt\Core\Infrastructure\Cli\Command;
 
+use Artefakt\Core\Infrastructure\Composer;
 use Artefakt\Core\Infrastructure\Environment;
 use Artefakt\Core\Infrastructure\Filesystem;
 use Artefakt\Core\Ports\Plugin\Contract\CommandPluginInterface;
@@ -89,11 +90,20 @@ class Initialize extends Command implements CommandPluginInterface
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
+            $rootDirectory = Filesystem::findComposerRootDirectory(__FILE__);
+            $directories   = array_merge(
+                [
+                    'components' => $input->getOption('components'),
+                    'documents'  => $input->getOption('documents'),
+                    'cache'      => $input->getOption('cache')
+                ],
+                (array)Composer::getArtefaktConfig("$rootDirectory/composer.json")
+            );
             Environment::initialize(
-                Filesystem::findComposerRootDirectory(__FILE__),
-                $input->getOption('components'),
-                $input->getOption('documents'),
-                $input->getOption('cache')
+                $rootDirectory,
+                $directories['components'],
+                $directories['documents'],
+                $directories['cache']
             );
             $output->writeln('<info>Pattern Library successfully initialized</info>');
         } catch (\ErrorException $e) {

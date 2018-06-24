@@ -36,6 +36,7 @@
 
 namespace Artefakt\Core\Ports\Plugin;
 
+use Artefakt\Core\Infrastructure\Composer;
 use Artefakt\Core\Infrastructure\Plugin\Validator\CommandValidator;
 
 /**
@@ -80,7 +81,7 @@ class Registry
      */
     protected function __construct(array $packageDescriptors)
     {
-        array_map([$this, 'processPluginPackageDescriptors'], $packageDescriptors);
+        array_map([$this, 'processPackageDescriptors'], $packageDescriptors);
     }
 
     /**
@@ -114,38 +115,14 @@ class Registry
      *
      * @param string $packageDescriptor Installed package
      */
-    protected function processPluginPackageDescriptors(string $packageDescriptor): void
+    protected function processPackageDescriptors(string $packageDescriptor): void
     {
-        // If the descriptor is not a valid file
-        if (!is_file($packageDescriptor)) {
-            return;
-        }
-
-        $packageDescriptorJson   = file_get_contents($packageDescriptor);
-        $packageDescriptorObject = json_decode($packageDescriptorJson);
-        if (isset($packageDescriptorObject->extra->{'apparat/artefakt'})) {
-            array_map(
-                [$this, 'processPlugins'],
-                (array)$packageDescriptorObject->extra->{'apparat/artefakt'}
-            );
-        }
-    }
-
-    /**
-     * Process a list of plugin descriptors
-     *
-     * @param \stdClass $pluginDescriptors Plugin descriptors
-     */
-    protected function processPlugins($pluginDescriptors): void
-    {
-        // If the plugin descriptors is not an object: Skip
-        if (!is_object($pluginDescriptors)) {
-            return;
-        }
-
-        // Run through and process all plugin types
-        foreach ($pluginDescriptors as $pluginType => $plugins) {
-            $this->processPluginsOfType($pluginType, $plugins);
+        $artefaktConfig = Composer::getArtefaktConfig($packageDescriptor);
+        if (isset($artefaktConfig->plugins) && is_object($artefaktConfig->plugins)) {
+            // Run through and process all plugin types
+            foreach ($artefaktConfig->plugins as $pluginType => $plugins) {
+                $this->processPluginsOfType($pluginType, $plugins);
+            }
         }
     }
 

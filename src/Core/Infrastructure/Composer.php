@@ -69,4 +69,24 @@ class Composer
             $directories['cache']
         );
     }
+
+    /**
+     * Extract and return the Artefakt configuration from a Composer configuration (if any)
+     *
+     * @param string $composerConfig Composer configuration file
+     *
+     * @return null|\stdClass Artefakt configuration
+     */
+    public static function getArtefaktConfig(string $composerConfig): ?\stdClass
+    {
+        if (!is_file($composerConfig)) {
+            return null;
+        }
+
+        $composerConfigJson   = file_get_contents($composerConfig);
+        $composerConfigObject = json_decode($composerConfigJson);
+
+        return isset($composerConfigObject->extra->{'apparat/artefakt'}) ?
+            $composerConfigObject->extra->{'apparat/artefakt'} : null;
+    }
 }
