@@ -36,7 +36,7 @@
 
 namespace Artefakt\Core\Tests\Infrastructure;
 
-use Artefakt\Core\Infrastructure\Environment;
+use Artefakt\Core\Infrastructure\Facade\Environment;
 use Artefakt\Core\Tests\AbstractTestBase;
 
 /**
@@ -55,7 +55,7 @@ class EnvironmentTest extends AbstractTestBase
      */
     public function testEnvironment()
     {
-        $rootDirectory = dirname(dirname(dirname(dirname(__DIR__)))).DIRECTORY_SEPARATOR;
+        $rootDirectory = dirname(dirname(dirname(dirname(__DIR__))));
         $this->assertEquals($rootDirectory, Environment::get(Environment::ROOT));
         $this->assertEquals('default', Environment::get('unknown', 'default'));
         Environment::get('invalid');

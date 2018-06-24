@@ -34,45 +34,31 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Infrastructure\Cli;
-
-use Artefakt\Core\Ports\Plugin\Registry;
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Exception\ExceptionInterface;
+namespace Artefakt\Core\Infrastructure\Facade;
 
 /**
- * Artefakt CLI Command
+ * Filesystem Helper
  *
- * @package    Artefakt\Artefakt
- * @subpackage Artefakt\Artefakt\Ports
+ * @package    Artefakt\Core
+ * @subpackage Artefakt\Core\Infrastructure
  */
-class App extends Application
+class Filesystem
 {
     /**
-     * Command errors
+     * Find the closest composer root directory for a given file / directory path
      *
-     * @var ExceptionInterface[]
+     * @param string $path File / directory path
+     *
+     * @return string Closest composer root directory
      */
-    protected $errors = [];
-
-    /**
-     * Artefakt CLI command constructor
-     *
-     * @param string[] $packageDescriptors Package descriptors
-     *
-     * @api
-     */
-    public function __construct()
+    public static function findComposerRootDirectory(string $path): ?string
     {
-        parent::__construct('Artefakt Pattern Library CLI Tool');
-
-        // Run through and register all known commands
-        foreach (Registry::plugins(Registry::COMMAND_PLUGIN) as $command) {
-            try {
-                $this->add(new $command());
-            } catch (ExceptionInterface $e) {
-                $this->errors[] = $e;
-            }
+        $lastPath = null;
+        while ($path && ($lastPath !== $path) && !is_dir($path.DIRECTORY_SEPARATOR.'vendor')) {
+            $lastPath = $path;
+            $path     = dirname($path);
         }
+
+        return (strlen($path) && ($lastPath !== $path)) ? $path : null;
     }
 }

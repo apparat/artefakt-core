@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Tests\Ports
+ * @subpackage Artefakt\Core\Infrastructure
  * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,33 +34,43 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Tests\Ports;
+namespace Artefakt\Core\Infrastructure\Cli;
 
-use Artefakt\Core\Ports\Plugin\Registry;
-use Artefakt\Core\Tests\AbstractTestBase;
-use Artefakt\Core\Tests\Fixture\Mock\Plugin\Command;
+use Symfony\Component\Console\Exception\ExceptionInterface;
 
 /**
- * Registry Tests
+ * Artefakt CLI Application
  *
- * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Tests\Ports
+ * @package    Artefakt\Artefakt
+ * @subpackage Artefakt\Artefakt\Ports
  */
-class RegistryTest extends AbstractTestBase
+class Application extends \Symfony\Component\Console\Application
 {
     /**
-     * Test the registry
+     * Command errors
+     *
+     * @var ExceptionInterface[]
      */
-    public function testRegistry()
+    protected $errors = [];
+
+    /**
+     * Artefakt CLI Application constructor
+     *
+     * @param string[] $commands Application commands
+     *
+     * @api
+     */
+    public function __construct(array $commands = [])
     {
-        Registry::bootstrap([
-            dirname(__DIR__).DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'composer.json',
-            dirname(__DIR__).DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'composer.invalid.json',
-            'invalid'
-        ]);
-        $plugins = Registry::plugins(Registry::COMMAND_PLUGIN);
-        $this->assertTrue(is_array($plugins));
-        $this->assertTrue(count($plugins) >= 1);
-        $this->assertTrue(in_array(Command::class, $plugins));
+        parent::__construct('Artefakt Pattern Library CLI Tool');
+
+        // Run through and register all given commands
+        foreach ($commands as $command) {
+            try {
+                $this->add(new $command());
+            } catch (ExceptionInterface $e) {
+                $this->errors[] = $e;
+            }
+        }
     }
 }

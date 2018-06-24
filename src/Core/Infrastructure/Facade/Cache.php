@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure
+ * @subpackage Artefakt\Core\Infrastructure\Facade
  * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,59 +34,61 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Infrastructure;
+namespace Artefakt\Core\Infrastructure\Facade;
 
-use Composer\Script\Event;
+use Artefakt\Core\Infrastructure\Factory\CacheFactory;
+use Artefakt\Core\Infrastructure\Plugin\Discovery;
+use Psr\SimpleCache\CacheInterface;
 
 /**
- * Composer Scripts
+ * Cache Facade (PSR-16 compatible)
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure
+ * @subpackage Artefakt\Core\Infrastructure\Facade
+ * @see        https://www.php-fig.org/psr/psr-16/
  */
-class Composer
+class Cache
 {
     /**
-     * Post-create-project script
+     * Singleton instance
      *
-     * @param Event $event Event
+     * @var CacheInterface
      */
-    public static function postCreateProjectCmd(Event $event)
+    protected static $instance = null;
+    /**
+     * Cache instance
+     *
+     * @var CacheInterface
+     */
+    protected $cache;
+
+    /**
+     * Cache constructor
+     *
+     * @param CacheInterface $cache Cache implementation
+     */
+    protected function __construct(CacheInterface $cache)
     {
-        $directories = [
-            'components' => Environment::$defaultDirectories[Environment::COMPONENTS],
-            'docs'       => Environment::$defaultDirectories[Environment::DOCUMENTS],
-            'cache'      => Environment::$defaultDirectories[Environment::CACHE],
-        ];
-        $extra       = $event->getComposer()->getPackage()->getExtra();
-        if (isset($extra['apparat/artefakt'])) {
-            $directories = array_merge($directories, (array)$extra['apparat/artefakt']);
-        }
-        Environment::initialize(
-            Filesystem::findComposerRootDirectory(__FILE__),
-            $directories['components'],
-            $directories['docs'],
-            $directories['cache']
-        );
+        $this->cache = $cache;
     }
 
     /**
-     * Extract and return the Artefakt configuration from a Composer configuration (if any)
+     * Create and initialize an instance
      *
-     * @param string $composerConfig Composer configuration file
-     *
-     * @return null|\stdClass Artefakt configuration
+     * @return CacheInterface Cache instance
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public static function getArtefaktConfig(string $composerConfig): ?\stdClass
+    public static function instance(): CacheInterface
     {
-        if (!is_file($composerConfig)) {
-            return null;
+        if (self::$instance === null) {
+            self::$instance = new static(CacheFactory::create());
+
+            // Auto-update (if necessary)
+            if (self::instance()->get('needs-update', true)) {
+                (new Discovery())->discover();
+            }
         }
 
-        $composerConfigJson   = file_get_contents($composerConfig);
-        $composerConfigObject = json_decode($composerConfigJson);
-
-        return isset($composerConfigObject->extra->{'apparat/artefakt'}) ?
-            $composerConfigObject->extra->{'apparat/artefakt'} : null;
+        return self::$instance->cache;
     }
 }

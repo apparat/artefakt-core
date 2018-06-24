@@ -36,9 +36,8 @@
 
 namespace Artefakt\Core\Ports;
 
-use Artefakt\Core\Infrastructure\Cli\App;
-use Artefakt\Core\Infrastructure\Environment;
-use Artefakt\Core\Ports\Plugin\Registry;
+use Artefakt\Core\Infrastructure\Cli\Application;
+use Artefakt\Core\Infrastructure\Facade\Cache;
 
 /**
  * Artefakt Facade
@@ -49,11 +48,31 @@ use Artefakt\Core\Ports\Plugin\Registry;
 class Artefakt
 {
     /**
+     * Command plugin
+     *
+     * @var string
+     */
+    const COMMAND_PLUGIN = 'command';
+    /**
      * Application is bootstrapped
      *
      * @var bool
      */
     protected static $bootstrapped = false;
+
+    /**
+     * Return a CLI application interface
+     *
+     * @return Application CLI application interface
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @api
+     */
+    public static function cli(): Application
+    {
+        self::bootstrap();
+
+        return new Application(self::plugins(self::COMMAND_PLUGIN));
+    }
 
     /**
      * Bootstrap the application
@@ -63,28 +82,23 @@ class Artefakt
     public static function bootstrap(): void
     {
         if (!self::$bootstrapped) {
-
-            // Bootstrap the plugin registry
-            $rootDirectory      = Environment::get(Environment::ROOT);
-            $packageDescriptors = array_merge(
-                glob($rootDirectory.'composer.json'),
-                glob($rootDirectory.'vendor'.DIRECTORY_SEPARATOR.'*'.DIRECTORY_SEPARATOR.'*'.DIRECTORY_SEPARATOR.'composer.json')
-            );
-            Registry::bootstrap($packageDescriptors);
+            // Bootstrapping steps
             self::$bootstrapped = true;
         }
     }
 
     /**
-     * Return a CLI application interface
+     * Return all plugins of a particular type
      *
-     * @return App CLI application interface
-     * @api
+     * @param string $pluginType Plugin type
+     *
+     * @return string[] Validated plugin classes
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public static function cli(): App
+    public static function plugins(string $pluginType): array
     {
         self::bootstrap();
 
-        return new App();
+        return Cache::instance()->get('plugins.'.$pluginType, []);
     }
 }

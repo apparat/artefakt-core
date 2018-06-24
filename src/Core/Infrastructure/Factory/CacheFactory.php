@@ -5,16 +5,16 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Ports\Plugin\Contract
- * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @subpackage Artefakt\Core\Infrastructure\Factory
+ * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
 /***********************************************************************************
  *  The MIT License (MIT)
  *
- *  Copyright © 2018 tollwerk GmbH <info@tollwerk.de>
+ *  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy of
  *  this software and associated documentation files (the "Software"), to deal in
@@ -34,17 +34,28 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Ports\Plugin\Contract;
+namespace Artefakt\Core\Infrastructure\Factory;
 
-use Artefakt\Core\Infrastructure\Contract\PluginInterface;
+use Artefakt\Core\Infrastructure\Facade\Environment;
+use Psr\SimpleCache\CacheInterface;
+use Symfony\Component\Cache\Simple\FilesystemCache;
 
 /**
- * Command Plugin Interface
+ * CacheFactory
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Ports\Plugin\Contract
+ * @subpackage Artefakt\Core\Infrastructure\Factory
  */
-interface CommandPluginInterface extends PluginInterface
+class CacheFactory
 {
-
+    /**
+     * Create a cache instance
+     *
+     * @return CacheInterface Cache instance
+     */
+    public static function create(): CacheInterface
+    {
+        // TODO: Add support for different cache adapters
+        return new FilesystemCache('core', 0, Environment::get(Environment::CACHE));
+    }
 }

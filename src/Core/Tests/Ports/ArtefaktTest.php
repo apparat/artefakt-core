@@ -36,7 +36,7 @@
 
 namespace Artefakt\Core\Tests\Ports;
 
-use Artefakt\Core\Infrastructure\Cli\App;
+use Artefakt\Core\Infrastructure\Cli\Application;
 use Artefakt\Core\Ports\Artefakt;
 use Artefakt\Core\Tests\AbstractTestBase;
 
@@ -54,6 +54,6 @@ class ArtefaktTest extends AbstractTestBase
     public function testCli()
     {
         $cli = Artefakt::cli();
-        $this->assertInstanceOf(App::class, $cli);
+        $this->assertInstanceOf(Application::class, $cli);
     }
 }

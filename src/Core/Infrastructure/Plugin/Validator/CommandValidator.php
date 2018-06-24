@@ -36,7 +36,7 @@
 
 namespace Artefakt\Core\Infrastructure\Plugin\Validator;
 
-use Artefakt\Core\Ports\Plugin\Contract\CommandPluginInterface;
+use Artefakt\Core\Ports\Contract\Plugin\CommandInterface;
 use Symfony\Component\Console\Command\Command;
 
 /**
@@ -57,7 +57,7 @@ class CommandValidator extends AbstractValidator
     public function validate(string $plugin): bool
     {
         return parent::validate($plugin)
-               && $this->reflection->implementsInterface(CommandPluginInterface::class)
+               && $this->reflection->implementsInterface(CommandInterface::class)
                && $this->reflection->isSubclassOf(Command::class);
 
     }

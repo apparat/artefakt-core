@@ -36,7 +36,7 @@
 
 namespace Artefakt\Core\Tests\Fixture\Mock\Plugin;
 
-use Artefakt\Core\Ports\Plugin\Contract\CommandPluginInterface;
+use Artefakt\Core\Ports\Contract\Plugin\CommandInterface;
 
 /**
  * Command Plugin Mock
@@ -44,7 +44,7 @@ use Artefakt\Core\Ports\Plugin\Contract\CommandPluginInterface;
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Tests\Fixture\Mock\Plugin
  */
-class Command extends \Symfony\Component\Console\Command\Command implements CommandPluginInterface
+class Command extends \Symfony\Component\Console\Command\Command implements CommandInterface
 {
 
 }

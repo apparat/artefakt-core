@@ -36,7 +36,8 @@
 
 namespace Artefakt\Core\Infrastructure\Cli\Command;
 
-use Artefakt\Core\Ports\Plugin\Contract\CommandPluginInterface;
+use Artefakt\Core\Infrastructure\Plugin\Discovery;
+use Artefakt\Core\Ports\Contract\Plugin\CommandInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -47,7 +48,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Infrastructure
  */
-class Discover extends Command implements CommandPluginInterface
+class Discover extends Command implements CommandInterface
 {
     /**
      * Configure the command
@@ -63,12 +64,15 @@ class Discover extends Command implements CommandPluginInterface
      * Executes the current command
      *
      * @return null|int Status
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
-            $output->writeln('<info>Discovered ? extension libraries</info>');
-        } catch (\ErrorException $e) {
+            $discoveryService   = new Discovery();
+            $extensionLibraries = $discoveryService->discover();
+            $output->writeln('<info>Found & processed '.$extensionLibraries.' extension libraries</info>');
+        } catch (\Exception $e) {
             $output->writeln('<error>Error: '.$e->getMessage().'</error>');
 
             return $e->getCode();

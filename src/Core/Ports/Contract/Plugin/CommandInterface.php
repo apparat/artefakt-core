@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure
+ * @subpackage Artefakt\Core\Ports\Plugin\Contract
  * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,31 +34,17 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Infrastructure;
+namespace Artefakt\Core\Ports\Contract\Plugin;
+
+use Artefakt\Core\Infrastructure\Contract\PluginInterface;
 
 /**
- * Filesystem Helper
+ * Command Plugin Interface
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure
+ * @subpackage Artefakt\Core\Ports\Plugin\Contract
  */
-class Filesystem
+interface CommandInterface extends PluginInterface
 {
-    /**
-     * Find the closest composer root directory for a given file / directory path
-     *
-     * @param string $path File / directory path
-     *
-     * @return string Closest composer root directory
-     */
-    public static function findComposerRootDirectory(string $path): ?string
-    {
-        $lastPath = null;
-        while ($path && ($lastPath !== $path) && !is_dir($path.DIRECTORY_SEPARATOR.'vendor')) {
-            $lastPath = $path;
-            $path     = dirname($path);
-        }
 
-        return (strlen($path) && ($lastPath !== $path)) ? $path : null;
-    }
 }

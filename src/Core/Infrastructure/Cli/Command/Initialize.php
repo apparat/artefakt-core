@@ -36,10 +36,10 @@
 
 namespace Artefakt\Core\Infrastructure\Cli\Command;
 
-use Artefakt\Core\Infrastructure\Composer;
-use Artefakt\Core\Infrastructure\Environment;
-use Artefakt\Core\Infrastructure\Filesystem;
-use Artefakt\Core\Ports\Plugin\Contract\CommandPluginInterface;
+use Artefakt\Core\Infrastructure\Facade\Composer;
+use Artefakt\Core\Infrastructure\Facade\Environment;
+use Artefakt\Core\Infrastructure\Facade\Filesystem;
+use Artefakt\Core\Ports\Contract\Plugin\CommandInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -51,7 +51,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Infrastructure
  */
-class Initialize extends Command implements CommandPluginInterface
+class Initialize extends Command implements CommandInterface
 {
     /**
      * Configure the command
@@ -106,7 +106,7 @@ class Initialize extends Command implements CommandPluginInterface
                 $directories['cache']
             );
             $output->writeln('<info>Pattern Library successfully initialized</info>');
-        } catch (\ErrorException $e) {
+        } catch (\Exception $e) {
             $output->writeln('<error>Error: '.$e->getMessage().'</error>');
 
             return $e->getCode();

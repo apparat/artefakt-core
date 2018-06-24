@@ -34,7 +34,7 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Infrastructure;
+namespace Artefakt\Core\Infrastructure\Facade;
 
 use Artefakt\Core\Infrastructure\Exceptions\DomainException;
 use Artefakt\Core\Infrastructure\Exceptions\RuntimeException;
@@ -123,8 +123,27 @@ class Environment
     {
         $composerReflection           = new \ReflectionClass(ClassLoader::class);
         $this->defaultEnv[self::ROOT] = dirname(dirname(dirname($composerReflection->getFileName()))).DIRECTORY_SEPARATOR;
-        foreach (self::$defaultDirectories as $key => $directory) {
-            $this->defaultEnv[$key] = $this->defaultEnv[self::ROOT].$directory.DIRECTORY_SEPARATOR;
+        $this->mergeValues($this->defaultEnv, self::$defaultDirectories);
+    }
+
+    /**
+     * Merge environment values
+     *
+     * @param array $array  Value store
+     * @param array $values Environment values
+     */
+    protected function mergeValues(array &$array, array $values): void
+    {
+        foreach ($values as $key => $value) {
+            switch ($key) {
+                case self::COMPONENTS:
+                case self::DOCUMENTS:
+                case self::CACHE:
+                    $array[$key] = Path::makeAbsolute($value, $this->defaultEnv[self::ROOT]);
+                    break;
+                default:
+                    $array[$key] = $value;
+            }
         }
     }
 
@@ -140,6 +159,8 @@ class Environment
             $dotenv = new Dotenv($this->defaultEnv[self::ROOT]);
             $dotenv->load();
         }
+
+        $this->mergeValues($this->env, getenv());
     }
 
     /**

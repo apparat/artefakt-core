@@ -36,7 +36,7 @@
 
 namespace Artefakt\Core\Tests\Infrastructure;
 
-use Artefakt\Core\Infrastructure\Filesystem;
+use Artefakt\Core\Infrastructure\Facade\Filesystem;
 use Artefakt\Core\Tests\AbstractTestBase;
 
 /**
