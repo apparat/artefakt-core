@@ -155,7 +155,7 @@ class Environment
         $this->env = $this->defaultEnv;
 
         // Load additional environment variables
-        if (file_exists($this->defaultEnv[self::ROOT].'.env')) {
+        if (file_exists($this->defaultEnv[self::ROOT].DIRECTORY_SEPARATOR.'.env')) {
             $dotenv = new Dotenv($this->defaultEnv[self::ROOT]);
             $dotenv->load();
         }
