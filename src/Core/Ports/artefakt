@@ -5,13 +5,10 @@ exit(call_user_func(function () {
     define('ARTEFAKT_START', microtime(true));
 
     // Require the autoloader
-    $directory = __FILE__;
-    while ($directory && !is_dir($directory.DIRECTORY_SEPARATOR.'vendor')) {
-        $directory = dirname($directory);
-    }
-    require $directory.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
+    require_once dirname(__DIR__).DIRECTORY_SEPARATOR.'Infrastructure'.DIRECTORY_SEPARATOR.'Filesystem.php';
+    $rootDirectory = \Artefakt\Core\Infrastructure\Filesystem::findComposerRootDirectory(__FILE__);
+    require $rootDirectory.DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
 
     // Bootstrap Artefakt and return a CLI interface
     \Artefakt\Core\Ports\Artefakt::cli()->run();
 }));
-

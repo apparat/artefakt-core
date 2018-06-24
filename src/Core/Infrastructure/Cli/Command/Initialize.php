@@ -95,9 +95,9 @@ class Initialize extends Command implements CommandPluginInterface
                 $input->getOption('documents'),
                 $input->getOption('cache')
             );
-            $output->write('<info>Project initialization successful</info>');
+            $output->writeln('<info>Pattern Library successfully initialized</info>');
         } catch (\ErrorException $e) {
-            $output->write('<error>Error: '.$e->getMessage().'</error>');
+            $output->writeln('<error>Error: '.$e->getMessage().'</error>');
 
             return $e->getCode();
         }

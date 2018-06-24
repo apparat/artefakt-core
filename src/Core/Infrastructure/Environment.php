@@ -83,7 +83,7 @@ class Environment
      */
     public static $defaultDirectories = [
         self::COMPONENTS => 'components',
-        self::DOCUMENTS  => 'docs',
+        self::DOCUMENTS  => 'documents',
         self::CACHE      => 'cache'
     ];
     /**
@@ -196,9 +196,10 @@ class Environment
      */
     public static function initialize(string $root, string $components, string $documents, string $cache): void
     {
+        $directories  = [self::COMPONENTS => $components, self::DOCUMENTS => $documents, self::CACHE => $cache];
         $dotEnvParser = new Envparser("$root/.env", true);
         $dotEnvEditor = new Enveditor($dotEnvParser);
-        $directories  = [self::COMPONENTS => $components, self::DOCUMENTS => $documents, self::CACHE => $cache];
+        $dotEnvEditor->persist(self::ROOT, $root);
 
         // Run through all necessary directories
         foreach ($directories as $key => $directory) {
