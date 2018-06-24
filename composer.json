@@ -34,10 +34,10 @@
         "ext-json": "*",
         "cocur/slugify": "^3.1",
         "justinrainbow/json-schema": "^5.2",
-        "makbari/dot-env-editor": "^0.1.4",
         "symfony/console": "^4.1",
         "vlucas/phpdotenv": "^2.4",
-        "webmozart/path-util": "^2.3"
+        "webmozart/path-util": "^2.3",
+        "zenlix/zenenv": "^1.4"
     },
     "autoload": {
         "psr-4": {

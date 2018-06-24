@@ -191,8 +191,11 @@ class Environment
      */
     public static function initialize(string $components, string $docs, string $cache): void
     {
-        $self = self::instance();
-
-        print_r(func_get_args());
+        $self                        = self::instance();
+        $rootDirectory               = self::get(self::ROOT);
+        $self->env[self::COMPONENTS] = Path::makeAbsolute($components, $rootDirectory);
+        $self->env[self::DOCUMENTS]  = Path::makeAbsolute($docs, $rootDirectory);
+        $self->env[self::CACHE]      = Path::makeAbsolute($cache, $rootDirectory);
+        print_r($self->env);
     }
 }

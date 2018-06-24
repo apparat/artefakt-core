@@ -60,19 +60,19 @@ class Initialize extends Command implements CommandPluginInterface
              ->setDescription('Create and initialize a new pattern library')
              ->setHelp('This command creates the pattern library directories and runs the necessary initialization steps')
              ->addOption(
-                 'component-root',
+                 'components',
                  null,
                  InputArgument::OPTIONAL,
                  'The directory where component descriptions are stored',
                  Environment::$defaultDirectories[Environment::COMPONENTS]
              )->addOption(
-                'document-root',
+                'documents',
                 null,
                 InputArgument::OPTIONAL,
                 'The directory where documentation resources are stored',
                 Environment::$defaultDirectories[Environment::DOCUMENTS]
             )->addOption(
-                'cache-root',
+                'cache',
                 null,
                 InputArgument::OPTIONAL,
                 'The directory where cache resources are stored',
@@ -89,9 +89,9 @@ class Initialize extends Command implements CommandPluginInterface
     {
         try {
             Environment::initialize(
-                $input->getOption('component-root'),
-                $input->getOption('document-root'),
-                $input->getOption('cache-root')
+                $input->getOption('components'),
+                $input->getOption('documents'),
+                $input->getOption('cache')
             );
             $output->write('<info>Project initialization successful</info>');
         } catch (\ErrorException $e) {
