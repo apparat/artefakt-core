@@ -122,7 +122,7 @@ class Environment
     protected function setDefaults(): void
     {
         $composerReflection           = new \ReflectionClass(ClassLoader::class);
-        $this->defaultEnv[self::ROOT] = dirname(dirname(dirname($composerReflection->getFileName()))).DIRECTORY_SEPARATOR;
+        $this->defaultEnv[self::ROOT] = dirname(dirname(dirname($composerReflection->getFileName())));
         $this->mergeValues($this->defaultEnv, self::$defaultDirectories);
     }
 
