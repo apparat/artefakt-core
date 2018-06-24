@@ -67,8 +67,8 @@ class Artefakt
             // Bootstrap the plugin registry
             $rootDirectory      = Environment::get(Environment::ROOT);
             $packageDescriptors = array_merge(
-                glob($rootDirectory.DIRECTORY_SEPARATOR.'composer.json'),
-                glob($rootDirectory.'*'.DIRECTORY_SEPARATOR.'*'.DIRECTORY_SEPARATOR.'composer.json')
+                glob($rootDirectory.'composer.json'),
+                glob($rootDirectory.'vendor'.DIRECTORY_SEPARATOR.'*'.DIRECTORY_SEPARATOR.'*'.DIRECTORY_SEPARATOR.'composer.json')
             );
             Registry::bootstrap($packageDescriptors);
             self::$bootstrapped = true;
