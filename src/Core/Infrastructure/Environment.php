@@ -37,6 +37,9 @@
 namespace Artefakt\Core\Infrastructure;
 
 use Artefakt\Core\Infrastructure\Exceptions\DomainException;
+use Artefakt\Core\Infrastructure\Exceptions\RuntimeException;
+use Codervio\Envmanager\Enveditor;
+use Codervio\Envmanager\Envparser;
 use Composer\Autoload\ClassLoader;
 use Dotenv\Dotenv;
 use Webmozart\PathUtil\Path;
@@ -186,17 +189,32 @@ class Environment
     /**
      * Initialize the environment
      *
+     * @param string $root       Root directory
      * @param string $components Component directory
-     * @param string $docs       Document directory
+     * @param string $documents  Document directory
      * @param string $cache      Cache directory
      */
-    public static function initialize(string $components, string $docs, string $cache): void
+    public static function initialize(string $root, string $components, string $documents, string $cache): void
     {
-        $self                        = self::instance();
-        $rootDirectory               = self::get(self::ROOT);
-        $self->env[self::COMPONENTS] = Path::makeAbsolute($components, $rootDirectory);
-        $self->env[self::DOCUMENTS]  = Path::makeAbsolute($docs, $rootDirectory);
-        $self->env[self::CACHE]      = Path::makeAbsolute($cache, $rootDirectory);
-        print_r($self->env);
+        $dotEnvParser = new Envparser("$root/.env", true);
+        $dotEnvEditor = new Enveditor($dotEnvParser);
+        $directories  = [self::COMPONENTS => $components, self::DOCUMENTS => $documents, self::CACHE => $cache];
+
+        // Run through all necessary directories
+        foreach ($directories as $key => $directory) {
+            $absDirectory = Path::makeAbsolute($directory, $root);
+            if (!is_dir($absDirectory) && !mkdir($absDirectory, 0755, true)) {
+                throw new RuntimeException(
+                    sprintf(RuntimeException::COULD_NOT_CREATE_DIRECTORY_STR, $directory),
+                    RuntimeException::COULD_NOT_CREATE_DIRECTORY
+                );
+            }
+
+            // Save the directory to the environment
+            $dotEnvEditor->persist($key, $directory);
+        }
+
+        // Save the environment variables
+        $dotEnvEditor->save();
     }
 }

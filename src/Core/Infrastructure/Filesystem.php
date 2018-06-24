@@ -6,15 +6,15 @@
  * @category   Artefakt
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Infrastructure
- * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
- * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
 /***********************************************************************************
  *  The MIT License (MIT)
  *
- *  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ *  Copyright © 2018 tollwerk GmbH <info@tollwerk.de>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy of
  *  this software and associated documentation files (the "Software"), to deal in
@@ -36,37 +36,29 @@
 
 namespace Artefakt\Core\Infrastructure;
 
-use Composer\Script\Event;
-
 /**
- * Composer Scripts
+ * Filesystem Helper
  *
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Infrastructure
  */
-class Composer
+class Filesystem
 {
     /**
-     * Post-create-project script
+     * Find the closest composer root directory for a given file / directory path
      *
-     * @param Event $event Event
+     * @param string $path File / directory path
+     *
+     * @return string Closest composer root directory
      */
-    public static function postCreateProjectCmd(Event $event)
+    public static function findComposerRootDirectory(string $path): ?string
     {
-        $directories = [
-            'components' => Environment::$defaultDirectories[Environment::COMPONENTS],
-            'docs'       => Environment::$defaultDirectories[Environment::DOCUMENTS],
-            'cache'      => Environment::$defaultDirectories[Environment::CACHE],
-        ];
-        $extra       = $event->getComposer()->getPackage()->getExtra();
-        if (isset($extra['apparat/artefakt'])) {
-            $directories = array_merge($directories, (array)$extra['apparat/artefakt']);
+        $lastPath = null;
+        while ($path && ($lastPath !== $path) && !is_dir($path.DIRECTORY_SEPARATOR.'vendor')) {
+            $lastPath = $path;
+            $path     = dirname($path);
         }
-        Environment::initialize(
-            Filesystem::findComposerRootDirectory(__FILE__),
-            $directories['components'],
-            $directories['docs'],
-            $directories['cache']
-        );
+
+        return (strlen($path) && ($lastPath !== $path)) ? $path : null;
     }
 }

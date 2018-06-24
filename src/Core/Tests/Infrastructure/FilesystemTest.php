@@ -5,16 +5,16 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure
- * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
- * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @subpackage Artefakt\Core\Tests\Infrastructure
+ * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
 /***********************************************************************************
  *  The MIT License (MIT)
  *
- *  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ *  Copyright © 2018 tollwerk GmbH <info@tollwerk.de>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy of
  *  this software and associated documentation files (the "Software"), to deal in
@@ -34,39 +34,27 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Infrastructure;
+namespace Artefakt\Core\Tests\Infrastructure;
 
-use Composer\Script\Event;
+use Artefakt\Core\Infrastructure\Filesystem;
+use Artefakt\Core\Tests\AbstractTestBase;
 
 /**
- * Composer Scripts
+ * Filesystem Tests
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure
+ * @subpackage Artefakt\Core\Tests\Infrastructure
  */
-class Composer
+class FilesystemTest extends AbstractTestBase
 {
     /**
-     * Post-create-project script
-     *
-     * @param Event $event Event
+     * Test the composer Root directory
      */
-    public static function postCreateProjectCmd(Event $event)
+    public function testComposerRootDirectory()
     {
-        $directories = [
-            'components' => Environment::$defaultDirectories[Environment::COMPONENTS],
-            'docs'       => Environment::$defaultDirectories[Environment::DOCUMENTS],
-            'cache'      => Environment::$defaultDirectories[Environment::CACHE],
-        ];
-        $extra       = $event->getComposer()->getPackage()->getExtra();
-        if (isset($extra['apparat/artefakt'])) {
-            $directories = array_merge($directories, (array)$extra['apparat/artefakt']);
-        }
-        Environment::initialize(
-            Filesystem::findComposerRootDirectory(__FILE__),
-            $directories['components'],
-            $directories['docs'],
-            $directories['cache']
-        );
+        $rootDirectory = Filesystem::findComposerRootDirectory(__FILE__);
+        $this->assertTrue(is_string($rootDirectory));
+        $this->assertEquals(dirname(dirname(dirname(dirname(__DIR__)))), $rootDirectory);
+        $this->assertNull(Filesystem::findComposerRootDirectory(dirname($rootDirectory)));
     }
 }

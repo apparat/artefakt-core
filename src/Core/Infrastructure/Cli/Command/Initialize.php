@@ -37,6 +37,7 @@
 namespace Artefakt\Core\Infrastructure\Cli\Command;
 
 use Artefakt\Core\Infrastructure\Environment;
+use Artefakt\Core\Infrastructure\Filesystem;
 use Artefakt\Core\Ports\Plugin\Contract\CommandPluginInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -89,6 +90,7 @@ class Initialize extends Command implements CommandPluginInterface
     {
         try {
             Environment::initialize(
+                Filesystem::findComposerRootDirectory(__FILE__),
                 $input->getOption('components'),
                 $input->getOption('documents'),
                 $input->getOption('cache')
