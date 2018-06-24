@@ -36,11 +36,9 @@ after_script:
     bash -c 'if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then php ocular.phar
     code-coverage:upload --format=php-clover build/logs/clover.xml; fi;'
   - >-
+    bash -c 'if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then php
+    vendor/bin/php-coveralls -v; fi;'
+  - >-
     bash -c 'if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then
     vendor/bin/test-reporter; fi;'
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
-
-after_success:
-  - >-
-    bash -c 'if [ "$TRAVIS_PHP_VERSION" != "hhvm" ]; then travis_retry php
-    vendor/bin/php-coveralls -v; fi;'
