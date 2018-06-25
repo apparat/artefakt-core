@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure\Factory
+ * @subpackage Artefakt\Core\Tests\Infrastructure
  * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,47 +34,60 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Infrastructure\Factory;
+namespace Artefakt\Core\Tests\Infrastructure;
 
-use Artefakt\Core\Infrastructure\Exceptions\RuntimeException;
 use Artefakt\Core\Infrastructure\Facade\Environment;
-use Psr\SimpleCache\CacheInterface;
+use Artefakt\Core\Infrastructure\Factory\CacheFactory;
+use Artefakt\Core\Tests\AbstractTestBase;
 use Symfony\Component\Cache\Simple\ArrayCache;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 
 /**
- * CacheFactory
+ * Cache Factory Tests
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure\Factory
+ * @subpackage Artefakt\Core\Tests\Infrastructure
  */
-class CacheFactory
+class CacheFactoryTest extends AbstractTestBase
 {
     /**
-     * Create a cache instance
-     *
-     * @return CacheInterface Cache instance
+     * Tear down
      */
-    public static function create(): CacheInterface
+    public static function tearDownAfterClass()
     {
-        $cacheImplementation = trim(Environment::get(Environment::CACHE_IMPLMENTATION, FilesystemCache::class));
-        if (strlen($cacheImplementation) && !class_exists($cacheImplementation)) {
-            $cacheImplementation = 'Symfony\\Component\\Cache\\Simple\\'.$cacheImplementation;
-        }
+        parent::tearDownAfterClass();
+        putenv(Environment::CACHE_IMPLMENTATION);
+        Environment::reset();
+    }
 
-        if (!strlen($cacheImplementation) || !class_exists($cacheImplementation)) {
-            throw new RuntimeException(
-                sprintf(RuntimeException::INVALID_CACHE_IMPLEMENTATION_STR, $cacheImplementation),
-                RuntimeException::INVALID_CACHE_IMPLEMENTATION
-            );
-        }
+    /**
+     * Test cache factory
+     */
+    public function testCacheFactory()
+    {
+        $this->assertInstanceOf(FilesystemCache::class, CacheFactory::create());
+    }
 
-        switch ($cacheImplementation) {
-            case ArrayCache::class:
-                return new ArrayCache();
-                break;
-            default:
-                return new $cacheImplementation('core', 0, Environment::get(Environment::CACHE));
-        }
+    /**
+     * Test cache factory with array cache
+     */
+    public function testCacheFactoryArrayCache()
+    {
+        putenv(Environment::CACHE_IMPLMENTATION.'=ArrayCache');
+        Environment::reset();
+        $this->assertInstanceOf(ArrayCache::class, CacheFactory::create());
+    }
+
+    /**
+     * Test cache factory
+     *
+     * @expectedException \Artefakt\Core\Infrastructure\Exceptions\RuntimeException
+     * @expectedExceptionCode 1529955944
+     */
+    public function testCacheFactoryInvalid()
+    {
+        putenv(Environment::CACHE_IMPLMENTATION.'=invalid');
+        Environment::reset();
+        CacheFactory::create();
     }
 }
