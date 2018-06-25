@@ -39,8 +39,6 @@ namespace Artefakt\Core\Tests\Infrastructure;
 use Artefakt\Core\Infrastructure\Facade\Cache;
 use Artefakt\Core\Ports\Artefakt;
 use Artefakt\Core\Tests\AbstractTestBase;
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
 use Psr\SimpleCache\CacheInterface;
 
 /**
@@ -52,26 +50,13 @@ use Psr\SimpleCache\CacheInterface;
 class CacheTest extends AbstractTestBase
 {
     /**
-     * Virtual file system
-     *
-     * @var vfsStreamDirectory
-     */
-    protected static $fileSystem;
-
-    /**
      * Set up
      */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
 
-        $fileSystem = vfsStream::setup('\\', 0700, ['components' => [], 'documents' => [], 'cache' => []]);
-
         Artefakt::reset();
-        putenv('ARTEFAKT_ROOT='.$fileSystem->url());
-        putenv('ARTEFAKT_COMPONENTS=components');
-        putenv('ARTEFAKT_DOCUMENTS=documents');
-        putenv('ARTEFAKT_CACHE=cache');
         putenv('ARTEFAKT_CACHE_IMPLEMENTATION=ArrayCache');
     }
 
@@ -80,10 +65,6 @@ class CacheTest extends AbstractTestBase
         parent::tearDownAfterClass();
 
         Artefakt::reset();
-        putenv('ARTEFAKT_ROOT');
-        putenv('ARTEFAKT_COMPONENTS');
-        putenv('ARTEFAKT_DOCUMENTS');
-        putenv('ARTEFAKT_CACHE');
         putenv('ARTEFAKT_CACHE_IMPLEMENTATION');
     }
 
