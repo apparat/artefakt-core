@@ -37,7 +37,9 @@
 namespace Artefakt\Core\Ports;
 
 use Artefakt\Core\Infrastructure\Cli\Application;
+use Artefakt\Core\Infrastructure\Contract\ResettableInterface;
 use Artefakt\Core\Infrastructure\Facade\Cache;
+use Artefakt\Core\Infrastructure\Facade\Environment;
 
 /**
  * Artefakt Facade
@@ -45,7 +47,7 @@ use Artefakt\Core\Infrastructure\Facade\Cache;
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Ports
  */
-class Artefakt
+class Artefakt implements ResettableInterface
 {
     /**
      * Command plugin
@@ -100,5 +102,16 @@ class Artefakt
         self::bootstrap();
 
         return Cache::instance()->get('plugins.'.$pluginType, []);
+    }
+
+    /**
+     * Reset
+     *
+     * @return void
+     */
+    public static function reset(): void
+    {
+        Environment::reset();
+        Cache::reset();
     }
 }

@@ -36,59 +36,30 @@
 
 namespace Artefakt\Core\Infrastructure\Facade;
 
-use Artefakt\Core\Infrastructure\Factory\CacheFactory;
-use Artefakt\Core\Infrastructure\Plugin\Discovery;
-use Psr\SimpleCache\CacheInterface;
+use Artefakt\Core\Infrastructure\Contract\ResettableInterface;
 
 /**
- * Cache Facade (PSR-16 compatible)
+ * Abstract Resettable Base
  *
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Infrastructure\Facade
- * @see        https://www.php-fig.org/psr/psr-16/
  */
-class Cache extends AbstractResettable
+abstract class AbstractResettable implements ResettableInterface
 {
     /**
-     * Singleton instance
+     * Instance
      *
-     * @var CacheInterface
+     * @var AbstractResettable
      */
-    protected static $instance = null;
-    /**
-     * Cache instance
-     *
-     * @var CacheInterface
-     */
-    protected $cache;
+    protected static $instance;
 
     /**
-     * Cache constructor
+     * Reset
      *
-     * @param CacheInterface $cache Cache implementation
+     * @return void
      */
-    protected function __construct(CacheInterface $cache)
+    public static function reset(): void
     {
-        $this->cache = $cache;
-    }
-
-    /**
-     * Create and initialize an instance
-     *
-     * @return CacheInterface Cache instance
-     * @throws \Psr\SimpleCache\InvalidArgumentException
-     */
-    public static function instance(): CacheInterface
-    {
-        if (self::$instance === null) {
-            self::$instance = new static(CacheFactory::create());
-
-            // Auto-update (if necessary)
-            if (self::instance()->get('needs-update', true)) {
-                (new Discovery())->discover();
-            }
-        }
-
-        return self::$instance->cache;
+        static::$instance = null;
     }
 }

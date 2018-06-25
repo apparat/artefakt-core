@@ -56,4 +56,16 @@ class RuntimeException extends \Artefakt\Core\Domain\Exceptions\RuntimeException
      * @var int
      */
     const COULD_NOT_CREATE_DIRECTORY = 1529837328;
+    /**
+     * Invalid cache implementation
+     *
+     * @var string
+     */
+    const INVALID_CACHE_IMPLEMENTATION_STR = 'Invalid cache implementation "%s"';
+    /**
+     * Invalid cache implementation
+     *
+     * @var string
+     */
+    const INVALID_CACHE_IMPLEMENTATION = 1529955944;
 }

@@ -36,8 +36,10 @@
 
 namespace Artefakt\Core\Infrastructure\Factory;
 
+use Artefakt\Core\Infrastructure\Exceptions\RuntimeException;
 use Artefakt\Core\Infrastructure\Facade\Environment;
 use Psr\SimpleCache\CacheInterface;
+use Symfony\Component\Cache\Simple\ArrayCache;
 use Symfony\Component\Cache\Simple\FilesystemCache;
 
 /**
@@ -55,7 +57,29 @@ class CacheFactory
      */
     public static function create(): CacheInterface
     {
-        // TODO: Add support for different cache adapters
-        return new FilesystemCache('core', 0, Environment::get(Environment::CACHE));
+        $cacheImplementation = trim(Environment::get(Environment::CACHE_IMPLMENTATION, FilesystemCache::class));
+        if (!strlen($cacheImplementation)) {
+            throw new RuntimeException(
+                sprintf(RuntimeException::INVALID_CACHE_IMPLEMENTATION_STR, $cacheImplementation),
+                RuntimeException::INVALID_CACHE_IMPLEMENTATION
+            );
+        }
+        if (!class_exists($cacheImplementation)) {
+            $cacheImplementation = 'Symfony\\Component\\Cache\\Simple\\'.$cacheImplementation;
+        }
+        if (!class_exists($cacheImplementation)) {
+            throw new RuntimeException(
+                sprintf(RuntimeException::INVALID_CACHE_IMPLEMENTATION_STR, $cacheImplementation),
+                RuntimeException::INVALID_CACHE_IMPLEMENTATION
+            );
+        }
+
+        switch ($cacheImplementation) {
+            case ArrayCache::class:
+                return new ArrayCache();
+                break;
+            default:
+                return new $cacheImplementation('core', 0, Environment::get(Environment::CACHE));
+        }
     }
 }

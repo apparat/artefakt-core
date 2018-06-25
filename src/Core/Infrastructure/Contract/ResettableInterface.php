@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure\Facade
+ * @subpackage Artefakt\Core\Infrastructure\Contract
  * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,61 +34,20 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Infrastructure\Facade;
-
-use Artefakt\Core\Infrastructure\Factory\CacheFactory;
-use Artefakt\Core\Infrastructure\Plugin\Discovery;
-use Psr\SimpleCache\CacheInterface;
+namespace Artefakt\Core\Infrastructure\Contract;
 
 /**
- * Cache Facade (PSR-16 compatible)
+ * Resettable Interface
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure\Facade
- * @see        https://www.php-fig.org/psr/psr-16/
+ * @subpackage Artefakt\Core\Infrastructure\Contract
  */
-class Cache extends AbstractResettable
+interface ResettableInterface
 {
     /**
-     * Singleton instance
+     * Reset
      *
-     * @var CacheInterface
+     * @return void
      */
-    protected static $instance = null;
-    /**
-     * Cache instance
-     *
-     * @var CacheInterface
-     */
-    protected $cache;
-
-    /**
-     * Cache constructor
-     *
-     * @param CacheInterface $cache Cache implementation
-     */
-    protected function __construct(CacheInterface $cache)
-    {
-        $this->cache = $cache;
-    }
-
-    /**
-     * Create and initialize an instance
-     *
-     * @return CacheInterface Cache instance
-     * @throws \Psr\SimpleCache\InvalidArgumentException
-     */
-    public static function instance(): CacheInterface
-    {
-        if (self::$instance === null) {
-            self::$instance = new static(CacheFactory::create());
-
-            // Auto-update (if necessary)
-            if (self::instance()->get('needs-update', true)) {
-                (new Discovery())->discover();
-            }
-        }
-
-        return self::$instance->cache;
-    }
+    public static function reset(): void;
 }

@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure\Facade
+ * @subpackage Artefakt\Core\Tests\Infrastructure
  * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,61 +34,66 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Infrastructure\Facade;
+namespace Artefakt\Core\Tests\Infrastructure;
 
-use Artefakt\Core\Infrastructure\Factory\CacheFactory;
-use Artefakt\Core\Infrastructure\Plugin\Discovery;
+use Artefakt\Core\Infrastructure\Facade\Cache;
+use Artefakt\Core\Ports\Artefakt;
+use Artefakt\Core\Tests\AbstractTestBase;
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
 use Psr\SimpleCache\CacheInterface;
 
 /**
- * Cache Facade (PSR-16 compatible)
+ * Cache Test
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure\Facade
- * @see        https://www.php-fig.org/psr/psr-16/
+ * @subpackage Artefakt\Core\Tests\Infrastructure
  */
-class Cache extends AbstractResettable
+class CacheTest extends AbstractTestBase
 {
     /**
-     * Singleton instance
+     * Virtual file system
      *
-     * @var CacheInterface
+     * @var vfsStreamDirectory
      */
-    protected static $instance = null;
-    /**
-     * Cache instance
-     *
-     * @var CacheInterface
-     */
-    protected $cache;
+    protected static $fileSystem;
 
     /**
-     * Cache constructor
-     *
-     * @param CacheInterface $cache Cache implementation
+     * Set up
      */
-    protected function __construct(CacheInterface $cache)
+    public static function setUpBeforeClass()
     {
-        $this->cache = $cache;
+        parent::setUpBeforeClass();
+
+        $fileSystem = vfsStream::setup('\\', 0700, ['components' => [], 'documents' => [], 'cache' => []]);
+
+        Artefakt::reset();
+        putenv('ARTEFAKT_ROOT='.$fileSystem->url());
+        putenv('ARTEFAKT_COMPONENTS=components');
+        putenv('ARTEFAKT_DOCUMENTS=documents');
+        putenv('ARTEFAKT_CACHE=cache');
+        putenv('ARTEFAKT_CACHE_IMPLEMENTATION=ArrayCache');
+    }
+
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+
+        Artefakt::reset();
+        putenv('ARTEFAKT_ROOT');
+        putenv('ARTEFAKT_COMPONENTS');
+        putenv('ARTEFAKT_DOCUMENTS');
+        putenv('ARTEFAKT_CACHE');
+        putenv('ARTEFAKT_CACHE_IMPLEMENTATION');
     }
 
     /**
-     * Create and initialize an instance
-     *
-     * @return CacheInterface Cache instance
-     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * Test the cache
      */
-    public static function instance(): CacheInterface
+    public function testCache()
     {
-        if (self::$instance === null) {
-            self::$instance = new static(CacheFactory::create());
-
-            // Auto-update (if necessary)
-            if (self::instance()->get('needs-update', true)) {
-                (new Discovery())->discover();
-            }
-        }
-
-        return self::$instance->cache;
+        $cache = Cache::instance();
+        $this->assertInstanceOf(CacheInterface::class, $cache);
+        $this->assertFalse(Cache::instance()->get('needs-update', true));
     }
 }

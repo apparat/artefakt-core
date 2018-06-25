@@ -50,7 +50,7 @@ use Webmozart\PathUtil\Path;
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Infrastructure
  */
-class Environment
+class Environment extends AbstractResettable
 {
     /**
      * Root directory
@@ -76,6 +76,12 @@ class Environment
      * @var string
      */
     const CACHE = 'ARTEFAKT_CACHE';
+    /**
+     * Cache implementation
+     *
+     * @var string
+     */
+    const CACHE_IMPLMENTATION = 'ARTEFAKT_CACHE_IMPLEMENTATION';
     /**
      * Default directories
      *
@@ -121,8 +127,11 @@ class Environment
      */
     protected function setDefaults(): void
     {
-        $composerReflection           = new \ReflectionClass(ClassLoader::class);
-        $this->defaultEnv[self::ROOT] = dirname(dirname(dirname($composerReflection->getFileName())));
+        $this->defaultEnv[self::ROOT] = getenv(self::ROOT);
+        if (!$this->defaultEnv[self::ROOT]) {
+            $composerReflection           = new \ReflectionClass(ClassLoader::class);
+            $this->defaultEnv[self::ROOT] = dirname(dirname(dirname($composerReflection->getFileName())));
+        }
         $this->mergeValues($this->defaultEnv, self::$defaultDirectories);
     }
 
