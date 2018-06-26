@@ -79,10 +79,12 @@ class Discovery
 
     /**
      * Discovery constructor.
+     *
+     * @param string|null $rootDirectory Root directory to discover plugins in
      */
-    public function __construct()
+    public function __construct(string $rootDirectory = null)
     {
-        $this->rootDirectory = Environment::get(Environment::ROOT);
+        $this->rootDirectory = $rootDirectory ?: Environment::get(Environment::ROOT);
     }
 
     /**
