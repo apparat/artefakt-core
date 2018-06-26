@@ -5,6 +5,12 @@
         </testsuite>
     </testsuites>
 
+    <php>
+        <env name="ARTEFAKT_COMPONENTS" value="build/components"/>
+        <env name="ARTEFAKT_DOCUMENTS" value="build/documents"/>
+        <env name="ARTEFAKT_CACHE" value="build/cache"/>
+    </php>
+
     <logging>
         <log type="coverage-xml" target="build/coverage"/>
     </logging>

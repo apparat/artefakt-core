@@ -55,9 +55,11 @@
     },
     "require-dev": {
         "clue/graph-composer": "dev-master",
+        "perchten/rmrdir": "^1.0",
         "php-coveralls/php-coveralls": "^2.1",
         "phpunit/phpunit": "^7.2",
-        "squizlabs/php_codesniffer": "^3.3"
+        "squizlabs/php_codesniffer": "^3.3",
+        "symfony/framework-bundle": "^4.1"
     },
     "extra": {
         "apparat/artefakt": {
