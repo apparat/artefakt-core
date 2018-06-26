@@ -226,7 +226,6 @@ class Environment extends AbstractResettable
         $directories  = [self::COMPONENTS => $components, self::DOCUMENTS => $documents, self::CACHE => $cache];
         $dotEnvParser = new Envparser("$root/.env", true);
         $dotEnvEditor = new Enveditor($dotEnvParser);
-        $dotEnvEditor->persist(self::ROOT, $root);
 
         // Run through all necessary directories
         foreach ($directories as $key => $directory) {
