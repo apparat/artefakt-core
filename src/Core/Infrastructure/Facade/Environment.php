@@ -127,11 +127,8 @@ class Environment extends AbstractResettable
      */
     protected function setDefaults(): void
     {
-        $this->defaultEnv[self::ROOT] = getenv(self::ROOT);
-        if (!$this->defaultEnv[self::ROOT]) {
-            $composerReflection           = new \ReflectionClass(ClassLoader::class);
-            $this->defaultEnv[self::ROOT] = dirname(dirname(dirname($composerReflection->getFileName())));
-        }
+        $composerReflection           = new \ReflectionClass(ClassLoader::class);
+        $this->defaultEnv[self::ROOT] = dirname(dirname(dirname($composerReflection->getFileName())));
         $this->mergeValues($this->defaultEnv, self::$defaultDirectories);
     }
 
