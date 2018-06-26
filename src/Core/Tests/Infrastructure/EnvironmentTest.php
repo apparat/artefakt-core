@@ -65,8 +65,18 @@ namespace Artefakt\Core\Tests\Infrastructure {
          */
         public function testEnvironment()
         {
+            $currentRoot = getenv(Environment::ROOT, true);
+            putenv(Environment::ROOT);
+            Environment::reset();
+
             $rootDirectory = dirname(dirname(dirname(dirname(__DIR__))));
             $this->assertEquals($rootDirectory, Environment::get(Environment::ROOT));
+
+            if ($currentRoot) {
+                putenv(Environment::ROOT.'='.$currentRoot);
+                Environment::reset();
+            }
+
             $this->assertEquals('default', Environment::get('unknown', 'default'));
             Environment::get('invalid');
         }
