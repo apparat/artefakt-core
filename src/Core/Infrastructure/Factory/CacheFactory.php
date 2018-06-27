@@ -57,7 +57,7 @@ class CacheFactory
      */
     public static function create(): CacheInterface
     {
-        $cacheImplementation = trim(Environment::get(Environment::CACHE_IMPLMENTATION, FilesystemCache::class));
+        $cacheImplementation = trim(Environment::get(Environment::CACHE_IMPLEMENTATION, FilesystemCache::class));
         if (strlen($cacheImplementation) && !class_exists($cacheImplementation)) {
             $cacheImplementation = 'Symfony\\Component\\Cache\\Simple\\'.$cacheImplementation;
         }

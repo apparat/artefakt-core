@@ -84,7 +84,7 @@ class Cache extends AbstractResettable
             self::$instance = new static(CacheFactory::create());
 
             // Auto-update (if necessary)
-            if (self::instance()->get('needs-update', true)) {
+            if (self::$instance->cache->get('needs-update', true)) {
                 (new Discovery())->discover();
             }
         }

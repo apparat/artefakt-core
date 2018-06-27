@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Tests\Infrastructure
+ * @subpackage Artefakt\Core\Tests\Infrastructure\Command
  * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,61 +34,34 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Tests\Infrastructure;
+namespace Artefakt\Core\Tests\Infrastructure\Command;
 
-use Artefakt\Core\Infrastructure\Facade\Environment;
-use Artefakt\Core\Infrastructure\Factory\CacheFactory;
-use Artefakt\Core\Ports\Artefakt;
-use Artefakt\Core\Tests\AbstractTestBase;
-use Symfony\Component\Cache\Simple\ArrayCache;
-use Symfony\Component\Cache\Simple\FilesystemCache;
+use Artefakt\Core\Infrastructure\Cli\Command\Discover;
+use Artefakt\Core\Infrastructure\Facade\Cache;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * Cache Factory Tests
+ * Discover Command Test
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Tests\Infrastructure
+ * @subpackage Artefakt\Core\Tests\Infrastructure\Command
  */
-class CacheFactoryTest extends AbstractTestBase
+class DiscoverTest extends AbstractCommandTestBase
 {
     /**
-     * Tear down
+     * Test the initialize command
      */
-    public static function tearDownAfterClass()
+    public function testInitialize()
     {
-        parent::tearDownAfterClass();
-        putenv(Environment::CACHE_IMPLEMENTATION);
-        Artefakt::reset();
-    }
-
-    /**
-     * Test cache factory
-     */
-    public function testCacheFactory()
-    {
-        $this->assertInstanceOf(FilesystemCache::class, CacheFactory::create());
-    }
-
-    /**
-     * Test cache factory with array cache
-     */
-    public function testCacheFactoryArrayCache()
-    {
-        putenv(Environment::CACHE_IMPLEMENTATION.'=ArrayCache');
-        Artefakt::reset();
-        $this->assertInstanceOf(ArrayCache::class, CacheFactory::create());
-    }
-
-    /**
-     * Test cache factory
-     *
-     * @expectedException \Artefakt\Core\Infrastructure\Exceptions\RuntimeException
-     * @expectedExceptionCode 1529955944
-     */
-    public function testCacheFactoryInvalid()
-    {
-        putenv(Environment::CACHE_IMPLEMENTATION.'=invalid');
-        Artefakt::reset();
-        CacheFactory::create();
+        $application = new Application();
+        $application->add(new Discover());
+        $command       = $application->find('app:discover');
+        $commandTester = new CommandTester($command);
+        $status        = $commandTester->execute([]);
+        $this->assertEquals(0, $status);
+        $output = $commandTester->getDisplay();
+        $this->assertContains('Found & processed 1 extension libraries', $output);
+        $this->assertFalse((boolean)Cache::instance()->get('needs-update'));
     }
 }

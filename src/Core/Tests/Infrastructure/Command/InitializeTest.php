@@ -37,8 +37,6 @@
 namespace Artefakt\Core\Tests\Infrastructure\Command;
 
 use Artefakt\Core\Infrastructure\Cli\Command\Initialize;
-use Artefakt\Core\Infrastructure\Facade\Environment;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Webmozart\PathUtil\Path;
@@ -49,52 +47,8 @@ use Webmozart\PathUtil\Path;
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Tests\Infrastructure\Command
  */
-class InitializeTest extends KernelTestCase
+class InitializeTest extends AbstractCommandTestBase
 {
-    /**
-     * Root directory
-     *
-     * @var string
-     */
-    protected static $rootDirectory;
-
-    /**
-     * Set up
-     */
-    public static function setUpBeforeClass()
-    {
-        parent::setUpBeforeClass();
-        self::$rootDirectory = Environment::get(Environment::ROOT);
-        self::cleanUp();
-    }
-
-    /**
-     * Cleanup tasks
-     */
-    protected static function cleanUp()
-    {
-        // Run through all application directories
-        foreach (['cmp', 'doc', 'cac'] as $key) {
-            $directory = Path::makeAbsolute("build/$key", self::$rootDirectory);
-            if (is_dir($directory)) {
-                rmrdir($directory);
-            }
-        }
-
-        if (file_exists(Path::makeAbsolute('.env', self::$rootDirectory))) {
-            unlink(Path::makeAbsolute('.env', self::$rootDirectory));
-        }
-    }
-
-    /**
-     * Tear down
-     */
-    public static function tearDownAfterClass()
-    {
-        parent::tearDownAfterClass();
-        self::cleanUp();
-    }
-
     /**
      * Test the initialize command
      */

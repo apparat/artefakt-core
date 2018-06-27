@@ -5,16 +5,16 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Tests\Infrastructure
- * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
- * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @subpackage Artefakt\Core\Tests\Infrastructure\Command
+ * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
 /***********************************************************************************
  *  The MIT License (MIT)
  *
- *  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ *  Copyright © 2018 tollwerk GmbH <info@tollwerk.de>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy of
  *  this software and associated documentation files (the "Software"), to deal in
@@ -34,61 +34,61 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Tests\Infrastructure;
+namespace Artefakt\Core\Tests\Infrastructure\Command;
 
 use Artefakt\Core\Infrastructure\Facade\Environment;
-use Artefakt\Core\Infrastructure\Factory\CacheFactory;
-use Artefakt\Core\Ports\Artefakt;
-use Artefakt\Core\Tests\AbstractTestBase;
-use Symfony\Component\Cache\Simple\ArrayCache;
-use Symfony\Component\Cache\Simple\FilesystemCache;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Webmozart\PathUtil\Path;
 
 /**
- * Cache Factory Tests
+ * Abstract Command Test Base
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Tests\Infrastructure
+ * @subpackage Artefakt\Core\Tests\Infrastructure\Command
  */
-class CacheFactoryTest extends AbstractTestBase
+class AbstractCommandTestBase extends KernelTestCase
 {
+    /**
+     * Root directory
+     *
+     * @var string
+     */
+    protected static $rootDirectory;
+
+    /**
+     * Set up
+     */
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        self::$rootDirectory = Environment::get(Environment::ROOT);
+        self::cleanUp();
+    }
+
+    /**
+     * Cleanup tasks
+     */
+    protected static function cleanUp()
+    {
+        // Run through all application directories
+        foreach (['cmp', 'doc', 'cac'] as $key) {
+            $directory = Path::makeAbsolute("build/$key", self::$rootDirectory);
+            if (is_dir($directory)) {
+                rmrdir($directory);
+            }
+        }
+
+        if (file_exists(Path::makeAbsolute('.env', self::$rootDirectory))) {
+            unlink(Path::makeAbsolute('.env', self::$rootDirectory));
+        }
+    }
+
     /**
      * Tear down
      */
     public static function tearDownAfterClass()
     {
         parent::tearDownAfterClass();
-        putenv(Environment::CACHE_IMPLEMENTATION);
-        Artefakt::reset();
-    }
-
-    /**
-     * Test cache factory
-     */
-    public function testCacheFactory()
-    {
-        $this->assertInstanceOf(FilesystemCache::class, CacheFactory::create());
-    }
-
-    /**
-     * Test cache factory with array cache
-     */
-    public function testCacheFactoryArrayCache()
-    {
-        putenv(Environment::CACHE_IMPLEMENTATION.'=ArrayCache');
-        Artefakt::reset();
-        $this->assertInstanceOf(ArrayCache::class, CacheFactory::create());
-    }
-
-    /**
-     * Test cache factory
-     *
-     * @expectedException \Artefakt\Core\Infrastructure\Exceptions\RuntimeException
-     * @expectedExceptionCode 1529955944
-     */
-    public function testCacheFactoryInvalid()
-    {
-        putenv(Environment::CACHE_IMPLEMENTATION.'=invalid');
-        Artefakt::reset();
-        CacheFactory::create();
+        self::cleanUp();
     }
 }

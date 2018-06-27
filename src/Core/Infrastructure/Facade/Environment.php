@@ -81,7 +81,7 @@ class Environment extends AbstractResettable
      *
      * @var string
      */
-    const CACHE_IMPLMENTATION = 'ARTEFAKT_CACHE_IMPLEMENTATION';
+    const CACHE_IMPLEMENTATION = 'ARTEFAKT_CACHE_IMPLEMENTATION';
     /**
      * Default directories
      *
@@ -165,6 +165,8 @@ class Environment extends AbstractResettable
             $dotenv = new Dotenv($this->defaultEnv[self::ROOT]);
             $dotenv->load();
         }
+
+
 
         $this->mergeValues($this->env, getenv());
     }
