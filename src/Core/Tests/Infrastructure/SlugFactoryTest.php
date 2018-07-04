@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure\Factory
+ * @subpackage Artefakt\Core\Tests\Infrastructure
  * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,66 +34,41 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Infrastructure\Factory;
+namespace Artefakt\Core\Tests\Infrastructure;
 
-use Artefakt\Core\Domain\Contract\NodeNameInterface;
-use Artefakt\Core\Domain\Model\NodeName;
-use Cocur\Slugify\Slugify;
-
+use Artefakt\Core\Infrastructure\Factory\SlugFactory;
+use Artefakt\Core\Tests\AbstractTestBase;
 
 /**
- * Node Name Factory
+ * Slug Factory Test
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure\Factory
+ * @subpackage Artefakt\Core\Tests\Infrastructure
  */
-class NodeNameFactory
+class SlugFactoryTest extends AbstractTestBase
 {
     /**
-     * Slugify instance
-     *
-     * @var Slugify
+     * Test the slug creation from a string
      */
-    protected static $slugify = null;
-
-    /**
-     * Create a node path
-     *
-     * @param string $path Node name path
-     *
-     * @return NodeNameInterface[] Node name path
-     */
-    public static function createFromPath(string $path): array
+    public function testCreateSlugFromString()
     {
-        return array_map([static::class, 'createFromString'], explode('/', $path));
+        $name = 'Test Component';
+        $slug = SlugFactory::createFromString($name);
+        $this->assertEquals('test-component', $slug);
+
+        // Test an encoded slash
+        $this->assertEquals(
+            'test-component',
+            SlugFactory::createFromString('Test'.rawurlencode('/').'Component')
+        );
     }
 
     /**
-     * Create a node name from a string
-     *
-     * @param string $name Node name string
-     *
-     * @return NodeNameInterface Node name
+     * Test the creation of a slug path
      */
-    public static function createFromString(string $name): NodeNameInterface
+    public function testCreateSlugsFromPath()
     {
-        $name = urldecode($name);
-        $slug = self::getSlugService()->slugify($name);
-
-        return new NodeName($name, $slug);
-    }
-
-    /**
-     * Return a service instance that can create slugs
-     *
-     * @return Slugify Slug service instance
-     */
-    protected static function getSlugService(): Slugify
-    {
-        if (self::$slugify === null) {
-            self::$slugify = new Slugify();
-        }
-
-        return self::$slugify;
+        $path = 'Test Component/Sub'.rawurlencode('/').'Component';
+        $this->assertEquals(['test-component', 'sub-component'], SlugFactory::createFromPath($path));
     }
 }

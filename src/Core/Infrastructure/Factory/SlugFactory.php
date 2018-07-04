@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Domain\Model
+ * @subpackage Artefakt\Core\Infrastructure\Factory
  * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,60 +34,61 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Domain\Model;
+namespace Artefakt\Core\Infrastructure\Factory;
 
-use Artefakt\Core\Domain\Contract\NodeNameInterface;
+use Cocur\Slugify\Slugify;
+
 
 /**
- * Node Name
+ * Slug Factory
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Domain\Model
+ * @subpackage Artefakt\Core\Infrastructure\Factory
  */
-class NodeName implements NodeNameInterface
+class SlugFactory
 {
     /**
-     * Node name
+     * Slugify instance
      *
-     * @var string
+     * @var Slugify
      */
-    protected $name;
-    /**
-     * Node name slug
-     *
-     * @var string
-     */
-    protected $slug;
+    protected static $slugify = null;
 
     /**
-     * Node Name constructor
+     * Create a slug path
      *
-     * @param string $name Node name
-     * @param string $slug Node name slug
+     * @param string $path Path string
+     *
+     * @return string[] Slug path
      */
-    public function __construct(string $name, string $slug)
+    public static function createFromPath(string $path): array
     {
-        $this->name = $name;
-        $this->slug = $slug;
+        return array_map([static::class, 'createFromString'], explode('/', $path));
     }
 
     /**
-     * Return the node name
+     * Create a slug from a string
      *
-     * @return string Node name
+     * @param string $string String
+     *
+     * @return string Slug
      */
-    public function getName(): string
+    public static function createFromString(string $string): string
     {
-        return $this->name;
+        return self::getSlugService()->slugify(urldecode($string));
     }
 
     /**
-     * Return the node name slug
+     * Return a service instance that can create slugs
      *
-     * @return string Node name slug
+     * @return Slugify Slug service instance
      */
-    public function getSlug(): string
+    protected static function getSlugService(): Slugify
     {
-        return $this->slug;
+        if (self::$slugify === null) {
+            self::$slugify = new Slugify();
+        }
+
+        return self::$slugify;
     }
 }
