@@ -40,6 +40,7 @@ use Artefakt\Core\Infrastructure\Cli\Application;
 use Artefakt\Core\Infrastructure\Contract\ResettableInterface;
 use Artefakt\Core\Infrastructure\Facade\Cache;
 use Artefakt\Core\Infrastructure\Facade\Environment;
+use Artefakt\Core\Ports\Contract\NodeInterface;
 
 /**
  * Artefakt Facade
@@ -55,12 +56,6 @@ class Artefakt implements ResettableInterface
      * @var string
      */
     const COMMAND_PLUGIN = 'command';
-    /**
-     * Application is bootstrapped
-     *
-     * @var bool
-     */
-    protected static $bootstrapped = false;
 
     /**
      * Return a CLI application interface
@@ -71,22 +66,7 @@ class Artefakt implements ResettableInterface
      */
     public static function cli(): Application
     {
-        self::bootstrap();
-
         return new Application(self::plugins(self::COMMAND_PLUGIN));
-    }
-
-    /**
-     * Bootstrap the application
-     *
-     * @api
-     */
-    public static function bootstrap(): void
-    {
-        if (!self::$bootstrapped) {
-            // Bootstrapping steps
-            self::$bootstrapped = true;
-        }
     }
 
     /**
@@ -99,8 +79,6 @@ class Artefakt implements ResettableInterface
      */
     public static function plugins(string $pluginType): array
     {
-        self::bootstrap();
-
         return Cache::instance()->get('plugins.'.$pluginType, []);
     }
 
@@ -113,5 +91,17 @@ class Artefakt implements ResettableInterface
     {
         Environment::reset();
         Cache::reset();
+    }
+
+    /**
+     * Return a library node
+     *
+     * @param string $path Node path
+     *
+     * @return NodeInterface Library node
+     */
+    public static function get(string $path): NodeInterface
+    {
+
     }
 }
