@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Domain\Contract
+ * @subpackage Artefakt\Core\Tests\Infrastructure
  * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,27 +34,50 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Domain\Contract;
+namespace Artefakt\Core\Tests\Infrastructure;
+
+use Artefakt\Core\Domain\Contract\NodeNameInterface;
+use Artefakt\Core\Infrastructure\Factory\NodeNameFactory;
+use Artefakt\Core\Tests\AbstractTestBase;
 
 /**
- * Node Name Iinterface
+ * Node Name Factory Test
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Domain\Contract
+ * @subpackage Artefakt\Core\Tests\Infrastructure
  */
-interface NodeNameInterface
+class NodeNameFactoryTest extends AbstractTestBase
 {
     /**
-     * Return the node name
-     *
-     * @return string Node name
+     * Test the node name creation from a string
      */
-    public function getName(): string;
+    public function testCreateNodeNameFromString()
+    {
+        $nodeNameString = 'Test Component';
+        $nodeName       = NodeNameFactory::createFromString($nodeNameString);
+        $this->assertInstanceOf(NodeNameInterface::class, $nodeName);
+        $this->assertEquals('test-component', $nodeName->getSlug());
+        $this->assertEquals($nodeNameString, $nodeName->getName());
+
+        // Test an encoded slash
+        $this->assertEquals(
+            'test-component',
+            NodeNameFactory::createFromString('Test'.rawurlencode('/').'Component')->getSlug()
+        );
+    }
 
     /**
-     * Return the node name slug
-     *
-     * @return string Node name slug
+     * Test the creation of a node name path
      */
-    public function getSlug(): string;
+    public function testCreateNodeNamesFromPath()
+    {
+        $nodeNamePathString = 'Test Component/Sub'.rawurlencode('/').'Component';
+        $nodeNamePathSlugs  = ['test-component', 'sub-component'];
+        $nodeNamePath       = NodeNameFactory::createFromPath($nodeNamePathString);
+        $this->assertTrue(is_array($nodeNamePath));
+        foreach ($nodeNamePath as $nodeName) {
+            $this->assertInstanceOf(NodeNameInterface::class, $nodeName);
+            $this->assertEquals(array_shift($nodeNamePathSlugs), $nodeName->getSlug());
+        }
+    }
 }

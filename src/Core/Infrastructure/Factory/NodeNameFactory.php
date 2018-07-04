@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Domain\Contract
+ * @subpackage Artefakt\Core\Infrastructure\Factory
  * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,27 +34,66 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Domain\Contract;
+namespace Artefakt\Core\Infrastructure\Factory;
+
+use Artefakt\Core\Domain\Contract\NodeNameInterface;
+use Artefakt\Core\Domain\Model\NodeName;
+use Cocur\Slugify\Slugify;
+
 
 /**
- * Node Name Iinterface
+ * Node Name Factory
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Domain\Contract
+ * @subpackage Artefakt\Core\Infrastructure\Factory
  */
-interface NodeNameInterface
+class NodeNameFactory
 {
     /**
-     * Return the node name
+     * Slugify instance
      *
-     * @return string Node name
+     * @var Slugify
      */
-    public function getName(): string;
+    protected static $slugify = null;
 
     /**
-     * Return the node name slug
+     * Create a node path
      *
-     * @return string Node name slug
+     * @param string $path Node name path
+     *
+     * @return NodeNameInterface[] Node name path
      */
-    public function getSlug(): string;
+    public static function createFromPath(string $path): array
+    {
+        return array_map([static::class, 'createFromString'], explode('/', $path));
+    }
+
+    /**
+     * Create a node name from a string
+     *
+     * @param string $name Node name string
+     *
+     * @return NodeNameInterface Node name
+     */
+    public static function createFromString(string $name): NodeNameInterface
+    {
+        $name = urldecode($name);
+        $slug = self::getSlugService()->slugify($name);
+
+        return new NodeName($name, $slug);
+    }
+
+    /**
+     * Return a service instance that can create slugs
+     *
+     * @return Slugify Slug service instance
+     */
+    protected static function getSlugService(): Slugify
+    {
+        if (self::$slugify === null) {
+            self::$slugify = new Slugify();
+        }
+
+        return self::$slugify;
+    }
 }
