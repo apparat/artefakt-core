@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Tests\Domain
+ * @subpackage Artefakt\Core\Ports\Contract\Plugin
  * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,29 +34,17 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Tests\Domain;
+namespace Artefakt\Core\Ports\Contract\Plugin;
 
-use Artefakt\Core\Domain\Model\NodeName;
-use Artefakt\Core\Tests\AbstractTestBase;
+use Artefakt\Core\Infrastructure\Contract\PluginInterface;
 
 /**
- * Node Name Test
+ * Component Plugin Interface
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Tests\Domain
+ * @subpackage Artefakt\Core\Ports
  */
-class NodeNameTest extends AbstractTestBase
+interface ComponentInterface extends PluginInterface
 {
-    /**
-     * Test the node name
-     */
-    public function testNodeName()
-    {
-        $name     = 'name'.rand();
-        $slug     = 'slug'.rand();
-        $nodeName = new NodeName($name, $slug);
-        $this->assertInstanceOf(NodeName::class, $nodeName);
-        $this->assertEquals($name, $nodeName->getName());
-        $this->assertEquals($slug, $nodeName->getSlug());
-    }
+
 }

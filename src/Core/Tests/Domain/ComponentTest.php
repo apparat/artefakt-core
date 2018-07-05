@@ -49,28 +49,30 @@ class ComponentTest extends AbstractTestBase
 {
     /**
      * Test the component
+     *
+     * @expectedException \Artefakt\Core\Domain\Exceptions\RuntimeException
+     * @expectedExceptionCode 1530822827
      */
     public function testComponent()
     {
         $componentName = 'component '.rand();
         $componentSlug = preg_replace('/[^a-z\d]/', '-', $componentName);
-        $component     = new Component($componentName, $componentSlug);
+        $component     = new \Artefakt\Core\Tests\Fixture\Mock\Component($componentSlug, $componentName);
         $this->assertInstanceOf(Component::class, $component);
-        $this->assertEquals($componentName, $component->getName());
-        $this->assertEquals($componentName.'set', $component->setName($componentName.'set')->getName());
-        $this->assertEquals($componentSlug, $component->getSlug());
-        $this->assertEquals($componentSlug.'set', $component->setSlug($componentSlug.'set')->getSlug());
-    }
 
-    /**
-     * Test an invalid component name
-     *
-     * @expectedException \Artefakt\Core\Domain\Exceptions\InvalidArgumentException
-     * @expectedExceptionCode 1529435561
-     */
-    public function testInvalidComponentName()
-    {
-        new Component('', 'slug');
+        $this->assertEquals($componentName, $component->name);
+        $component->name = $componentName.'set';
+        $this->assertEquals($componentName.'set', $component->name);
+
+        $this->assertEquals($componentSlug, $component->slug);
+        $component->slug = $componentSlug.'set';
+        $this->assertEquals($componentSlug.'set', $component->slug);
+
+        $anonymous            = md5(rand());
+        $component->anonymous = $anonymous;
+        $this->assertEquals($anonymous, $component->anonymous);
+
+        $component->unknown;
     }
 
     /**
@@ -81,6 +83,17 @@ class ComponentTest extends AbstractTestBase
      */
     public function testInvalidComponentSlug()
     {
-        new Component('Name', '');
+        new Component('', 'Name');
+    }
+
+    /**
+     * Test an invalid component name
+     *
+     * @expectedException \Artefakt\Core\Domain\Exceptions\InvalidArgumentException
+     * @expectedExceptionCode 1529435561
+     */
+    public function testInvalidComponentName()
+    {
+        new Component('slug', ' ');
     }
 }

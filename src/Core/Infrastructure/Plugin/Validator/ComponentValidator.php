@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure
+ * @subpackage Artefakt\Core\Infrastructure\Plugin\TypeValidator
  * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,56 +34,28 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Infrastructure\Facade;
+namespace Artefakt\Core\Infrastructure\Plugin\Validator;
 
-use Artefakt\Core\Infrastructure\Exceptions\RuntimeException;
+use Artefakt\Core\Ports\Contract\Plugin\ComponentInterface;
 
 /**
- * Filesystem Helper
+ * Component Plugin Validator
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure
+ * @subpackage Artefakt\Core\Infrastructure\Plugin\Validator
  */
-class Filesystem
+class ComponentValidator extends AbstractValidator
 {
     /**
-     * Find the closest composer root directory for a given file / directory path
+     * Validate a plugin
      *
-     * @param string $path File / directory path
+     * @param string $plugin Plugin class name
      *
-     * @return string Closest composer root directory
+     * @return bool Plugin class is valid
      */
-    public static function findComposerRootDirectory(string $path): ?string
+    public function validate(string $plugin): bool
     {
-        $lastPath = null;
-        while ($path && ($lastPath !== $path) && !is_dir($path.DIRECTORY_SEPARATOR.'vendor')) {
-            $lastPath = $path;
-            $path     = dirname($path);
-        }
-
-        return (strlen($path) && ($lastPath !== $path)) ? $path : null;
-    }
-
-    /**
-     * Load JSON data from the file system
-     *
-     * @param string $path File path
-     *
-     * @return array JSON data
-     * @throws RuntimeException If the file is empty or invalid
-     */
-    public static function loadJSON(string $path): array
-    {
-        // If the file is empty or invalid
-        $json = is_file($path) ? trim(file_get_contents($path)) : '';
-        $data = strlen($json) ? json_decode($json, true) : null;
-        if (is_array($data)) {
-            return $data;
-        }
-
-        throw new RuntimeException(
-            sprintf(RuntimeException::INVALID_FILE_STR, $path),
-            RuntimeException::INVALID_FILE
-        );
+        return parent::validate($plugin)
+               && $this->reflection->implementsInterface(ComponentInterface::class);
     }
 }

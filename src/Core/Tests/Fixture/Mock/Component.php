@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Domain\Contract
+ * @subpackage Artefakt\Core\Tests\Fixture\Mock
  * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,27 +34,23 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Domain\Contract;
+namespace Artefakt\Core\Tests\Fixture\Mock;
 
 /**
- * Node Name Iinterface
+ * Component Mock
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Domain\Contract
+ * @subpackage Artefakt\Core\Tests\Fixture\Mock
  */
-interface NodeNameInterface
+class Component extends \Artefakt\Core\Domain\Model\Component
 {
     /**
-     * Return the node name
+     * Explicit getter
      *
-     * @return string Node name
+     * @return string Name
      */
-    public function getName(): string;
-
-    /**
-     * Return the node name slug
-     *
-     * @return string Node name slug
-     */
-    public function getSlug(): string;
+    protected function getName(): string
+    {
+        return $this->properties['name'];
+    }
 }

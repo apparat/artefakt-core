@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Tests\Domain
+ * @subpackage Artefakt\Core\Infrastructure\Model
  * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,52 +34,41 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Tests\Domain;
+namespace Artefakt\Core\Infrastructure\Model;
 
 use Artefakt\Core\Domain\Model\Collection;
-use Artefakt\Core\Domain\Model\Component;
-use Artefakt\Core\Tests\AbstractTestBase;
+use Artefakt\Core\Infrastructure\Model\Traits\LazyLoadingTrait;
 
 /**
- * Collection2 tests
+ * Lazy Loading File System Collection
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Tests\Domain
+ * @subpackage Artefakt\Core\Infrastructure
  */
-class CollectionTest extends AbstractTestBase
+class FileSystemCollection extends Collection
 {
     /**
-     * Test the collection
+     * Use the Lazy Loading Trait
      */
-    public function testCollection()
+    use LazyLoadingTrait;
+
+    /**
+     * Load the node from the file system
+     */
+    protected function load(): void
     {
-        $collection = new Collection('collection', 'Collection');
-        $this->assertInstanceOf(Collection::class, $collection);
-        $this->assertEquals(0, count($collection));
-
-        $components = [
-            new Component('node-a', 'Node A'),
-            new Component('node-b', 'Node B'),
-        ];
-
-        // Add a first component
-        $collection->attach($components[1]);
-        $this->assertEquals(1, count($collection));
-        $this->assertTrue($collection->contains($components[1]));
-
-        // Add a second component via array access
-        $collection->attach($components[0]);
-        $this->assertEquals(2, count($collection));
-
-        // Iterate through all components
-        foreach ($collection as $index => $component) {
-            $this->assertTrue(is_int($index));
-            $this->assertInstanceOf(Component::class, $component);
-            $this->assertEquals(array_shift($components), $component);
-
-            if ($index == 1) {
-                $this->assertEquals(1, count($collection->detach($component)));
-            }
+        if (!$this->loaded) {
+            $this->loaded = $this->loadProperties() && $this->loadChildren();
         }
+    }
+
+    /**
+     * Load the collection children
+     *
+     * @return bool Success
+     */
+    protected function loadChildren(): bool
+    {
+        return true;
     }
 }

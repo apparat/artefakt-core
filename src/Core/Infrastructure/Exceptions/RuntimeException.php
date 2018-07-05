@@ -65,7 +65,19 @@ class RuntimeException extends \Artefakt\Core\Domain\Exceptions\RuntimeException
     /**
      * Invalid cache implementation
      *
-     * @var string
+     * @var int
      */
     const INVALID_CACHE_IMPLEMENTATION = 1529955944;
+    /**
+     * Invalid file
+     *
+     * @var string
+     */
+    const INVALID_FILE_STR = 'Invalid file "%s"';
+    /**
+     * Invalid file
+     *
+     * @var int
+     */
+    const INVALID_FILE = 1530825225;
 }

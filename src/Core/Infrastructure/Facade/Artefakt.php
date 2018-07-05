@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Application\Factory
+ * @subpackage Artefakt\Core\Infrastructure
  * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,15 +34,41 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Application\Factory;
+namespace Artefakt\Core\Infrastructure\Facade;
+
+use Artefakt\Core\Infrastructure\Contract\ResettableInterface;
+use Artefakt\Core\Infrastructure\Facade\Cache;
+use Artefakt\Core\Infrastructure\Facade\Environment;
 
 /**
- * Component Factory
+ * Artefakt Pattern Library
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Application\Factory
+ * @subpackage Artefakt\Core\Infrastructure
  */
-class ComponentFactory
+class Artefakt implements ResettableInterface
 {
+    /**
+     * Return all plugins of a particular type
+     *
+     * @param string $pluginType Plugin type
+     *
+     * @return string[] Validated plugin classes
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     */
+    public static function plugins(string $pluginType): array
+    {
+        return Cache::instance()->get('plugins.'.$pluginType, []);
+    }
 
+    /**
+     * Reset
+     *
+     * @return void
+     */
+    public static function reset(): void
+    {
+        Environment::reset();
+        Cache::reset();
+    }
 }

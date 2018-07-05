@@ -37,9 +37,7 @@
 namespace Artefakt\Core\Ports;
 
 use Artefakt\Core\Infrastructure\Cli\Application;
-use Artefakt\Core\Infrastructure\Contract\ResettableInterface;
-use Artefakt\Core\Infrastructure\Facade\Cache;
-use Artefakt\Core\Infrastructure\Facade\Environment;
+use Artefakt\Core\Infrastructure\Facade\Artefakt as InfrastructureArtefakt;
 use Artefakt\Core\Ports\Contract\NodeInterface;
 
 /**
@@ -48,7 +46,7 @@ use Artefakt\Core\Ports\Contract\NodeInterface;
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Ports
  */
-class Artefakt implements ResettableInterface
+class Artefakt extends InfrastructureArtefakt
 {
     /**
      * Command plugin
@@ -70,35 +68,12 @@ class Artefakt implements ResettableInterface
     }
 
     /**
-     * Return all plugins of a particular type
-     *
-     * @param string $pluginType Plugin type
-     *
-     * @return string[] Validated plugin classes
-     * @throws \Psr\SimpleCache\InvalidArgumentException
-     */
-    public static function plugins(string $pluginType): array
-    {
-        return Cache::instance()->get('plugins.'.$pluginType, []);
-    }
-
-    /**
-     * Reset
-     *
-     * @return void
-     */
-    public static function reset(): void
-    {
-        Environment::reset();
-        Cache::reset();
-    }
-
-    /**
      * Return a library node
      *
      * @param string $path Node path
      *
      * @return NodeInterface Library node
+     * @api
      */
     public static function get(string $path): NodeInterface
     {

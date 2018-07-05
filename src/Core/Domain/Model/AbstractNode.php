@@ -146,4 +146,21 @@ abstract class AbstractNode implements AbstractNodeInterface
 
         $this->properties[$name] = $value;
     }
+
+    /**
+     * Batch-assign properties
+     *
+     * @param array $properties Properties
+     *
+     * @return bool Success
+     */
+    public function assign(array $properties): bool
+    {
+        // Run through all properties
+        foreach ($properties as $name => $value) {
+            $this->$name = $value;
+        }
+
+        return true;
+    }
 }

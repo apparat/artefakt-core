@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Tests\Domain
+ * @subpackage Artefakt\Core\Infrastructure\Model\Traits
  * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,52 +34,51 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Tests\Domain;
+namespace Artefakt\Core\Infrastructure\Model\Traits;
 
-use Artefakt\Core\Domain\Model\Collection;
-use Artefakt\Core\Domain\Model\Component;
-use Artefakt\Core\Tests\AbstractTestBase;
+use Artefakt\Core\Infrastructure\Facade\Filesystem;
 
 /**
- * Collection2 tests
- *
- * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Tests\Domain
+ * Lazy Loading Node Trait
+ * @package Artefakt\Core\Infrastructure\Model\Traits
  */
-class CollectionTest extends AbstractTestBase
+trait LazyLoadingTrait
 {
     /**
-     * Test the collection
+     * File system directory
+     *
+     * @var string
      */
-    public function testCollection()
+    protected $directory;
+    /**
+     * Node has been loaded
+     *
+     * @var bool
+     */
+    protected $loaded = false;
+
+    /**
+     * Lazy Loading Node constructor
+     *
+     * @param string $directory File System Directory
+     */
+    public function __construct(string $directory)
     {
-        $collection = new Collection('collection', 'Collection');
-        $this->assertInstanceOf(Collection::class, $collection);
-        $this->assertEquals(0, count($collection));
+        $this->directory = $directory;
+    }
 
-        $components = [
-            new Component('node-a', 'Node A'),
-            new Component('node-b', 'Node B'),
-        ];
+    /**
+     * Load the node from the file system
+     */
+    abstract protected function load(): void;
 
-        // Add a first component
-        $collection->attach($components[1]);
-        $this->assertEquals(1, count($collection));
-        $this->assertTrue($collection->contains($components[1]));
-
-        // Add a second component via array access
-        $collection->attach($components[0]);
-        $this->assertEquals(2, count($collection));
-
-        // Iterate through all components
-        foreach ($collection as $index => $component) {
-            $this->assertTrue(is_int($index));
-            $this->assertInstanceOf(Component::class, $component);
-            $this->assertEquals(array_shift($components), $component);
-
-            if ($index == 1) {
-                $this->assertEquals(1, count($collection->detach($component)));
-            }
-        }
+    /**
+     * Load the node properties
+     *
+     * @return bool Success
+     */
+    protected function loadProperties(): bool
+    {
+        return $this->assign(Filesystem::loadJSON($this->directory.DIRECTORY_SEPARATOR.'properties.json'));
     }
 }
