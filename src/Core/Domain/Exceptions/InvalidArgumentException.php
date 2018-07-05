@@ -47,27 +47,27 @@ use Artefakt\Core\Domain\Contract\ExceptionInterface;
 class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
     /**
-     * Invalid component name
+     * Invalid node name
      *
      * @var string
      */
-    const INVALID_COMPONENT_NAME_STR = 'Invalid component name "%s"';
+    const INVALID_NODE_NAME_STR = 'Invalid node name "%s"';
     /**
-     * Invalid component name
+     * Invalid node name
      *
      * @var string
      */
-    const INVALID_COMPONENT_NAME = 1529435561;
+    const INVALID_NODE_NAME = 1529435561;
     /**
-     * Invalid component slug
+     * Invalid node slug
      *
      * @var string
      */
-    const INVALID_COMPONENT_SLUG_STR = 'Invalid component slug "%s"';
+    const INVALID_NODE_SLUG_STR = 'Invalid node slug "%s"';
     /**
-     * Invalid component slug
+     * Invalid node slug
      *
      * @var string
      */
-    const INVALID_COMPONENT_SLUG = 1529523904;
+    const INVALID_NODE_SLUG = 1529523904;
 }

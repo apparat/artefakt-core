@@ -44,19 +44,5 @@ namespace Artefakt\Core\Domain\Contract;
  */
 interface AbstractNodeInterface
 {
-    /**
-     * Get the component name
-     *
-     * @return string Component name
-     */
-    public function getName(): string;
 
-    /**
-     * Set the component name
-     *
-     * @param string $name Component name
-     *
-     * @return AbstractNodeInterface Self reference
-     */
-    public function setName(string $name): AbstractNodeInterface;
 }

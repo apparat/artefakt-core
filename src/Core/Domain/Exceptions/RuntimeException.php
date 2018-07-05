@@ -46,5 +46,16 @@ use Artefakt\Core\Domain\Contract\ExceptionInterface;
  */
 class RuntimeException extends \RuntimeException implements ExceptionInterface
 {
-
+    /**
+     * Unknown node property
+     *
+     * @var string
+     */
+    const UNKNOWN_NODE_PROPERTY_STR = 'Unknown node property "%s"';
+    /**
+     * Unknown node property
+     *
+     * @var string
+     */
+    const UNKNOWN_NODE_PROPERTY = 1530822827;
 }

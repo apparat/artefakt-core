@@ -38,99 +38,112 @@ namespace Artefakt\Core\Domain\Model;
 
 use Artefakt\Core\Domain\Contract\AbstractNodeInterface;
 use Artefakt\Core\Domain\Exceptions\InvalidArgumentException;
+use Artefakt\Core\Domain\Exceptions\RuntimeException;
 
 /**
  * Abstract Node
  *
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Domain\Model
+ * @property string $name Node name
+ * @property string $slug Node name slug
  */
 abstract class AbstractNode implements AbstractNodeInterface
 {
     /**
-     * Component name
+     * Properties
      *
-     * @var string
+     * @var array
      */
-    protected $name;
-    /**
-     * Component name slug
-     *
-     * @var string
-     */
-    protected $slug;
+    protected $properties = [];
 
     /**
      * Node constructor
      *
-     * @param string $name Node name
      * @param string $slug Node name slug
+     * @param string $name Node name
      */
-    public function __construct(string $name, string $slug)
+    public function __construct(string $slug, string $name = null)
     {
-        $this->setName($name);
         $this->setSlug($slug);
-    }
-
-    /**
-     * Get the component name
-     *
-     * @return string Component name
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set the component name
-     *
-     * @param string $name Component name
-     *
-     * @return AbstractNodeInterface Self reference
-     */
-    public function setName(string $name): AbstractNodeInterface
-    {
-        $name = trim($name);
-        if (!strlen($name)) {
-            throw new InvalidArgumentException(
-                sprintf(InvalidArgumentException::INVALID_COMPONENT_NAME_STR, $name),
-                InvalidArgumentException::INVALID_COMPONENT_NAME
-            );
-        }
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Return the component name slug
-     *
-     * @return string Component name slug
-     */
-    public function getSlug(): string
-    {
-        return $this->slug;
+        $this->setName($name ?: $slug);
     }
 
     /**
      * Set the component name slug
      *
      * @param string $slug Component name slug
-     *
-     * @return AbstractNode Self reference
      */
-    public function setSlug(string $slug): AbstractNode
+    protected function setSlug(string $slug)
     {
         $slug = trim($slug);
         if (!strlen($slug)) {
             throw new InvalidArgumentException(
-                sprintf(InvalidArgumentException::INVALID_COMPONENT_SLUG_STR, $slug),
-                InvalidArgumentException::INVALID_COMPONENT_SLUG
+                sprintf(InvalidArgumentException::INVALID_NODE_SLUG_STR, $slug),
+                InvalidArgumentException::INVALID_NODE_SLUG
             );
         }
-        $this->slug = $slug;
+        $this->properties['slug'] = $slug;
+    }
 
-        return $this;
+    /**
+     * Set the component name
+     *
+     * @param string $name Component name
+     */
+    protected function setName(string $name)
+    {
+        $name = trim($name);
+        if (!strlen($name)) {
+            throw new InvalidArgumentException(
+                sprintf(InvalidArgumentException::INVALID_NODE_NAME_STR, $name),
+                InvalidArgumentException::INVALID_NODE_NAME
+            );
+        }
+        $this->properties['name'] = $name;
+    }
+
+    /**
+     * Magic property getter
+     *
+     * @param string $name Property name
+     *
+     * @return mixed Property value
+     * @throws RuntimeException If the property is unknown
+     */
+    public function __get(string $name)
+    {
+        // If there's an explicit getter
+        if (is_callable([$this, 'get'.ucfirst($name)])) {
+            return $this->{'get'.ucfirst($name)}();
+        }
+
+        // If the property is known
+        if (array_key_exists($name, $this->properties)) {
+            return $this->properties[$name];
+        }
+
+        throw new RuntimeException(
+            sprintf(RuntimeException::UNKNOWN_NODE_PROPERTY_STR, $name),
+            RuntimeException::UNKNOWN_NODE_PROPERTY
+        );
+    }
+
+    /**
+     * Magic property setter
+     *
+     * @param string $name Property name
+     * @param mixed $value Property value
+     */
+    public function __set(string $name, $value)
+    {
+        // If there's an explicit setter
+        if (is_callable([$this, 'set'.ucfirst($name)])) {
+            $this->{'set'.ucfirst($name)}($value);
+
+            return;
+        }
+
+        $this->properties[$name] = $value;
     }
 }

@@ -188,6 +188,6 @@ class Collection extends AbstractNode implements CollectionInterface
      */
     protected function sortByNodeName(AbstractNodeInterface $node1, AbstractNodeInterface $node2): int
     {
-        return strnatcasecmp($node1->getName(), $node2->getName());
+        return strnatcasecmp($node1->name, $node2->name);
     }
 }
