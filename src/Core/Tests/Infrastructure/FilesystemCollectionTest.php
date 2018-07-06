@@ -6,15 +6,15 @@
  * @category   Artefakt
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Tests\Infrastructure
- * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
 /***********************************************************************************
  *  The MIT License (MIT)
  *
- *  Copyright © 2018 tollwerk GmbH <info@tollwerk.de>
+ *  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy of
  *  this software and associated documentation files (the "Software"), to deal in
@@ -36,39 +36,53 @@
 
 namespace Artefakt\Core\Tests\Infrastructure;
 
-use Artefakt\Core\Infrastructure\Facade\Filesystem;
+use Artefakt\Core\Domain\Contract\AbstractNodeInterface;
+use Artefakt\Core\Domain\Model\Component;
+use Artefakt\Core\Infrastructure\Model\FilesystemCollection;
 use Artefakt\Core\Tests\AbstractTestBase;
 
 /**
- * Filesystem Tests
+ * File System Collection Tests
  *
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Tests\Infrastructure
  */
-class FilesystemTest extends AbstractTestBase
+class FilesystemCollectionTest extends AbstractTestBase
 {
     /**
-     * Test the composer Root directory
+     * Root directory
+     *
+     * @var string
      */
-    public function testComposerRootDirectory()
+    protected static $rootDirectory;
+
+    /**
+     * Set up
+     */
+    public static function setUpBeforeClass()
     {
-        $rootDirectory = Filesystem::findComposerRootDirectory(__FILE__);
-        $this->assertTrue(is_string($rootDirectory));
-        $this->assertEquals(dirname(dirname(dirname(dirname(__DIR__)))), $rootDirectory);
-        $this->assertNull(Filesystem::findComposerRootDirectory(dirname($rootDirectory)));
+        parent::setUpBeforeClass();
+        self::$rootDirectory = dirname(__DIR__).DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'Components';
     }
 
     /**
-     * Test loading JSON files
-     *
-     * @expectedException \Artefakt\Core\Infrastructure\Exceptions\RuntimeException
-     * @expectedExceptionCode 1530825225
+     * Test the file system collection
      */
-    public function testLoadJSON()
+    public function testFileSystemCollection()
     {
-        $jsonData = Filesystem::loadJSON(dirname(__DIR__).DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'composer.json');
-        $this->assertTrue(is_array($jsonData));
-        $this->assertTrue(isset($jsonData['extra']));
-        Filesystem::loadJSON('invalid');
+        $collection = new FilesystemCollection(self::$rootDirectory);
+        $this->assertInstanceOf(FilesystemCollection::class, $collection);
+        $this->assertEquals(1, count($collection));
+        foreach ($collection as $index => $node) {
+            $this->assertTrue(is_int($index));
+            $this->assertInstanceOf(FilesystemCollection::class, $node);
+        }
+
+        $component = new Component('test');
+        $this->assertInstanceOf(AbstractNodeInterface::class, $collection->attach($component));
+        $this->assertTrue($collection->contains($component));
+        $this->assertEquals(2, count($collection));
+        $this->assertInstanceOf(AbstractNodeInterface::class, $collection->detach($component));
+        $this->assertEquals(1, count($collection));
     }
 }

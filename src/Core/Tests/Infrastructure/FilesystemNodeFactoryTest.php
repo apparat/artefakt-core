@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure\Model
+ * @subpackage Artefakt\Core\Tests\Infrastructure
  * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,41 +34,34 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Infrastructure\Model;
+namespace Artefakt\Core\Tests\Infrastructure;
 
-use Artefakt\Core\Domain\Model\Collection;
-use Artefakt\Core\Infrastructure\Model\Traits\LazyLoadingTrait;
+use Artefakt\Core\Infrastructure\Factory\FilesystemNodeFactory;
+use Artefakt\Core\Infrastructure\Model\FilesystemCollection;
+use Artefakt\Core\Infrastructure\Model\FilesystemComponent;
+use Artefakt\Core\Tests\AbstractTestBase;
+
 
 /**
- * Lazy Loading File System Collection
+ * Filesystem Node Factory Tests
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Infrastructure
+ * @subpackage Artefakt\Core\Tests\Infrastructure
  */
-class FileSystemCollection extends Collection
+class FilesystemNodeFactoryTest extends AbstractTestBase
 {
     /**
-     * Use the Lazy Loading Trait
-     */
-    use LazyLoadingTrait;
-
-    /**
-     * Load the node from the file system
-     */
-    protected function load(): void
-    {
-        if (!$this->loaded) {
-            $this->loaded = $this->loadProperties() && $this->loadChildren();
-        }
-    }
-
-    /**
-     * Load the collection children
+     * Test the filesystem node factory
      *
-     * @return bool Success
+     * @expectedException \Artefakt\Core\Infrastructure\Exceptions\RuntimeException
+     * @expectedExceptionCode 1530912244
      */
-    protected function loadChildren(): bool
+    public function testFilesystemNodeFactory()
     {
-        return true;
+        $component = FilesystemNodeFactory::createFromDescriptor('test'.DIRECTORY_SEPARATOR.'component.json');
+        $this->assertInstanceOf(FilesystemComponent::class, $component);
+        $collection = FilesystemNodeFactory::createFromDescriptor('test'.DIRECTORY_SEPARATOR.'collection.json');
+        $this->assertInstanceOf(FilesystemCollection::class, $collection);
+        FilesystemNodeFactory::createFromDescriptor('invalid');
     }
 }

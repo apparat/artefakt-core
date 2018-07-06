@@ -5,16 +5,16 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Tests\Infrastructure
- * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
- * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @subpackage Artefakt\Core\Infrastructure\Model
+ * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
 /***********************************************************************************
  *  The MIT License (MIT)
  *
- *  Copyright © 2018 tollwerk GmbH <info@tollwerk.de>
+ *  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy of
  *  this software and associated documentation files (the "Software"), to deal in
@@ -34,41 +34,39 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Tests\Infrastructure;
+namespace Artefakt\Core\Infrastructure\Model;
 
-use Artefakt\Core\Infrastructure\Facade\Filesystem;
-use Artefakt\Core\Tests\AbstractTestBase;
+use Artefakt\Core\Domain\Contract\AbstractNodeInterface;
+use Artefakt\Core\Domain\Model\Component;
+use Artefakt\Core\Infrastructure\Contract\LazyLoadingInterface;
+use Artefakt\Core\Infrastructure\Model\Traits\LazyLoadingTrait;
 
 /**
- * Filesystem Tests
+ * Lazy Loading File System Component
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Tests\Infrastructure
+ * @subpackage Artefakt\Core\Infrastructure\Model
  */
-class FilesystemTest extends AbstractTestBase
+class FilesystemComponent extends Component implements LazyLoadingInterface
 {
     /**
-     * Test the composer Root directory
+     * Use the Lazy Loading Trait
      */
-    public function testComposerRootDirectory()
-    {
-        $rootDirectory = Filesystem::findComposerRootDirectory(__FILE__);
-        $this->assertTrue(is_string($rootDirectory));
-        $this->assertEquals(dirname(dirname(dirname(dirname(__DIR__)))), $rootDirectory);
-        $this->assertNull(Filesystem::findComposerRootDirectory(dirname($rootDirectory)));
-    }
+    use LazyLoadingTrait;
 
     /**
-     * Test loading JSON files
+     * Load the node from the file system
      *
-     * @expectedException \Artefakt\Core\Infrastructure\Exceptions\RuntimeException
-     * @expectedExceptionCode 1530825225
+     * @param int $status Load a particular load status
+     *
+     * @return AbstractNodeInterface Self reference
      */
-    public function testLoadJSON()
+    protected function load(int $status = LazyLoadingInterface::LOADED_ALL): AbstractNodeInterface
     {
-        $jsonData = Filesystem::loadJSON(dirname(__DIR__).DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'composer.json');
-        $this->assertTrue(is_array($jsonData));
-        $this->assertTrue(isset($jsonData['extra']));
-        Filesystem::loadJSON('invalid');
+        if (!($this->loaded & ($status & LazyLoadingInterface::LOADED_PROPERTIES))) {
+            $this->loadProperties();
+        }
+
+        return $this;
     }
 }

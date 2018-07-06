@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Application\Factory
+ * @subpackage Artefakt\Core\Infrastructure\Factory
  * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,15 +34,49 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Application\Factory;
+namespace Artefakt\Core\Infrastructure\Factory;
+
+use Artefakt\Core\Domain\Contract\AbstractNodeInterface;
+use Artefakt\Core\Infrastructure\Exceptions\RuntimeException;
+use Artefakt\Core\Infrastructure\Model\FilesystemCollection;
+use Artefakt\Core\Infrastructure\Model\FilesystemComponent;
 
 /**
- * Node Factory
+ * Filesystem Node Factory
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Application\Factory
+ * @subpackage Artefakt\Core\Infrastructure\Factory
  */
-class NodeFactory
+class FilesystemNodeFactory
 {
+    /**
+     * Descriptor classes
+     *
+     * @var array
+     */
+    protected static $descriptorClasses = [
+        'component.json'  => FilesystemComponent::class,
+        'collection.json' => FilesystemCollection::class,
+    ];
 
+    /**
+     * Create a filesystem node from a descriptor
+     *
+     * @param string $path Descriptor path
+     *
+     * @return AbstractNodeInterface Filesystem node
+     * @throws RuntimeException If the node descriptor is invalid
+     */
+    public static function createFromDescriptor(string $path): AbstractNodeInterface
+    {
+        $descriptor = pathinfo($path, PATHINFO_BASENAME);
+        if (array_key_exists($descriptor, self::$descriptorClasses)) {
+            return new self::$descriptorClasses[$descriptor](dirname($path));
+        }
+
+        throw new RuntimeException(
+            sprintf(RuntimeException::INVALID_NODE_DESCRIPTOR_STR, $path),
+            RuntimeException::INVALID_NODE_DESCRIPTOR
+        );
+    }
 }

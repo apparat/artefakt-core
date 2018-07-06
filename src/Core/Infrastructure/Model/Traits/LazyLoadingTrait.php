@@ -36,6 +36,8 @@
 
 namespace Artefakt\Core\Infrastructure\Model\Traits;
 
+use Artefakt\Core\Domain\Contract\AbstractNodeInterface;
+use Artefakt\Core\Infrastructure\Contract\LazyLoadingInterface;
 use Artefakt\Core\Infrastructure\Facade\Filesystem;
 
 /**
@@ -68,17 +70,48 @@ trait LazyLoadingTrait
     }
 
     /**
-     * Load the node from the file system
+     * Magic property getter
+     *
+     * @param string $name Property name
+     *
+     * @return mixed Property value
      */
-    abstract protected function load(): void;
+    public function __get(string $name)
+    {
+        $this->load(LazyLoadingInterface::LOADED_PROPERTIES);
+
+        return parent::__get($name);
+    }
+
+    /**
+     * Magic property setter
+     *
+     * @param string $name Property name
+     * @param mixed $value Property value
+     */
+    public function __set(string $name, $value)
+    {
+        $this->load(LazyLoadingInterface::LOADED_PROPERTIES);
+
+        parent::__set($name, $value);
+    }
+
+    /**
+     * Load the node from the file system
+     *
+     * @param int $status Load a particular load status
+     *
+     * @return AbstractNodeInterface Self reference
+     */
+    abstract protected function load(int $status = LazyLoadingInterface::LOADED_ALL): AbstractNodeInterface;
 
     /**
      * Load the node properties
-     *
-     * @return bool Success
      */
-    protected function loadProperties(): bool
+    protected function loadProperties(): void
     {
-        return $this->assign(Filesystem::loadJSON($this->directory.DIRECTORY_SEPARATOR.'properties.json'));
+        if ($this->assign(Filesystem::loadJSON($this->directory.DIRECTORY_SEPARATOR.'collection.json'))) {
+            $this->loaded |= LazyLoadingInterface::LOADED_PROPERTIES;
+        }
     }
 }

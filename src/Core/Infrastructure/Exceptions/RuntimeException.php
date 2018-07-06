@@ -80,4 +80,16 @@ class RuntimeException extends \Artefakt\Core\Domain\Exceptions\RuntimeException
      * @var int
      */
     const INVALID_FILE = 1530825225;
+    /**
+     * Invalid node descriptor
+     *
+     * @var string
+     */
+    const INVALID_NODE_DESCRIPTOR_STR = 'Invalid node descriptor "%s"';
+    /**
+     * Invalid node descriptor
+     *
+     * @var int
+     */
+    const INVALID_NODE_DESCRIPTOR = 1530912244;
 }
