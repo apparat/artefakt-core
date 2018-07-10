@@ -56,4 +56,12 @@ class ArtefaktTest extends AbstractTestBase
         $cli = Artefakt::cli();
         $this->assertInstanceOf(Application::class, $cli);
     }
+
+    /**
+     * Test getting the library collection
+     */
+    public function testGet()
+    {
+        print_r(Artefakt::get());
+    }
 }

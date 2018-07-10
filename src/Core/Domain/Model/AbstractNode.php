@@ -37,7 +37,6 @@
 namespace Artefakt\Core\Domain\Model;
 
 use Artefakt\Core\Domain\Contract\AbstractNodeInterface;
-use Artefakt\Core\Domain\Exceptions\InvalidArgumentException;
 use Artefakt\Core\Domain\Exceptions\RuntimeException;
 
 /**
@@ -74,16 +73,32 @@ abstract class AbstractNode implements AbstractNodeInterface
      *
      * @param string $slug Component name slug
      */
-    protected function setSlug(string $slug)
+    public function setSlug(string $slug)
+    {
+        $this->properties['slug'] = $this->validateSlug($slug);
+    }
+
+    /**
+     * Validate a node slug
+     *
+     * @param string $slug Slug
+     *
+     * @return string Validated slug
+     * @throws RuntimeException If the slug is empty
+     */
+    protected function validateSlug(string $slug): string
     {
         $slug = trim($slug);
+
+        // If the slug is empty
         if (!strlen($slug)) {
-            throw new InvalidArgumentException(
-                sprintf(InvalidArgumentException::INVALID_NODE_SLUG_STR, $slug),
-                InvalidArgumentException::INVALID_NODE_SLUG
+            throw new RuntimeException(
+                sprintf(RuntimeException::INVALID_NODE_SLUG_STR, $slug),
+                RuntimeException::INVALID_NODE_SLUG
             );
         }
-        $this->properties['slug'] = $slug;
+
+        return $slug;
     }
 
     /**
@@ -95,9 +110,9 @@ abstract class AbstractNode implements AbstractNodeInterface
     {
         $name = trim($name);
         if (!strlen($name)) {
-            throw new InvalidArgumentException(
-                sprintf(InvalidArgumentException::INVALID_NODE_NAME_STR, $name),
-                InvalidArgumentException::INVALID_NODE_NAME
+            throw new RuntimeException(
+                sprintf(RuntimeException::INVALID_NODE_NAME_STR, $name),
+                RuntimeException::INVALID_NODE_NAME
             );
         }
         $this->properties['name'] = $name;

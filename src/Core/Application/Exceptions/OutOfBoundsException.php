@@ -5,16 +5,16 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Domain\Exceptions
- * @author     Joschi Kuphal <joschi@kuphal.net> / @jkphl
- * @copyright  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ * @subpackage Artefakt\Core\Application\Exceptions
+ * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
+ * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
 /***********************************************************************************
  *  The MIT License (MIT)
  *
- *  Copyright © 2018 Joschi Kuphal <joschi@kuphal.net> / @jkphl
+ *  Copyright © 2018 tollwerk GmbH <info@tollwerk.de>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy of
  *  this software and associated documentation files (the "Software"), to deal in
@@ -34,17 +34,15 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Domain\Exceptions;
-
-use Artefakt\Core\Domain\Contract\ExceptionInterface;
+namespace Artefakt\Core\Application\Exceptions;
 
 /**
- * Invalid Argument Exception
+ * Domain Exception
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Domain\Exceptions
+ * @subpackage Artefakt\Core\Application\Exceptions
  */
-class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
+class DomainException extends \Artefakt\Core\Domain\Exceptions\OutOfBoundsException
 {
 
 }

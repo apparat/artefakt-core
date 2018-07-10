@@ -78,7 +78,7 @@ class ComponentTest extends AbstractTestBase
     /**
      * Test an invalid component slug
      *
-     * @expectedException \Artefakt\Core\Domain\Exceptions\InvalidArgumentException
+     * @expectedException \Artefakt\Core\Domain\Exceptions\RuntimeException
      * @expectedExceptionCode 1529523904
      */
     public function testInvalidComponentSlug()
@@ -89,7 +89,7 @@ class ComponentTest extends AbstractTestBase
     /**
      * Test an invalid component name
      *
-     * @expectedException \Artefakt\Core\Domain\Exceptions\InvalidArgumentException
+     * @expectedException \Artefakt\Core\Domain\Exceptions\RuntimeException
      * @expectedExceptionCode 1529435561
      */
     public function testInvalidComponentName()

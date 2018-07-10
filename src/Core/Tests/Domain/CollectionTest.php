@@ -36,6 +36,7 @@
 
 namespace Artefakt\Core\Tests\Domain;
 
+use Artefakt\Core\Domain\Contract\CollectionInterface;
 use Artefakt\Core\Domain\Model\Collection;
 use Artefakt\Core\Domain\Model\Component;
 use Artefakt\Core\Tests\AbstractTestBase;
@@ -50,6 +51,8 @@ class CollectionTest extends AbstractTestBase
 {
     /**
      * Test the collection
+     * @expectedException \Artefakt\Core\Domain\Exceptions\OutOfBoundsException
+     * @expectedExceptionCode 1531252812
      */
     public function testCollection()
     {
@@ -58,8 +61,8 @@ class CollectionTest extends AbstractTestBase
         $this->assertEquals(0, count($collection));
 
         $components = [
-            new Component('node-a', 'Node A'),
-            new Component('node-b', 'Node B'),
+            new Component('Node A', 'node-a'),
+            new Component('Node B', 'node-b'),
         ];
 
         // Add a first component
@@ -81,5 +84,8 @@ class CollectionTest extends AbstractTestBase
                 $this->assertEquals(1, count($collection->detach($component)));
             }
         }
+
+        $this->assertInstanceOf(CollectionInterface::class, $collection->find('node-a'));
+        $collection->find('unknown');
     }
 }

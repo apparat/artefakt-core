@@ -36,9 +36,14 @@
 
 namespace Artefakt\Core\Ports;
 
+use Artefakt\Core\Domain\Contract\CollectionInterface;
+use Artefakt\Core\Domain\Exceptions\OutOfBoundsException as DomainOutOfBoundsException;
 use Artefakt\Core\Infrastructure\Cli\Application;
+use Artefakt\Core\Infrastructure\Exceptions\OutOfBoundsException;
 use Artefakt\Core\Infrastructure\Facade\Artefakt as InfrastructureArtefakt;
+use Artefakt\Core\Infrastructure\Factory\SlugFactory;
 use Artefakt\Core\Ports\Contract\NodeInterface;
+use Jkphl\Elevator\Ports\Elevator;
 
 /**
  * Artefakt Facade
@@ -75,8 +80,26 @@ class Artefakt extends InfrastructureArtefakt
      * @return NodeInterface Library node
      * @api
      */
-    public static function get(string $path): NodeInterface
+    public static function get(string $path = ''): NodeInterface
     {
+        $path  = trim($path);
+        $node  = static::collection();
+        $slugs = strlen($path) ? SlugFactory::createFromPath($path) : [];
 
+        // Run through the slug path
+        foreach ($slugs as $slug) {
+            if (!($node instanceof CollectionInterface)) {
+                throw new OutOfBoundsException();
+            }
+            try {
+                $node = $node->find($slug);
+            } catch (DomainOutOfBoundsException $e) {
+                /** @var OutOfBoundsException $elevated */
+                $elevated = Elevator::elevate($e, OutOfBoundsException::class);
+                throw $elevated;
+            }
+        }
+
+        return $node;
     }
 }

@@ -5,7 +5,7 @@
  *
  * @category   Artefakt
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Application\Exceptions
+ * @subpackage Artefakt\Core\Domain\Exceptions
  * @author     Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @copyright  Copyright © 2018 Joschi Kuphal <joschi@tollwerk.de> / @jkphl
  * @license    http://opensource.org/licenses/MIT The MIT License (MIT)
@@ -34,15 +34,28 @@
  *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-namespace Artefakt\Core\Application\Exceptions;
+namespace Artefakt\Core\Domain\Exceptions;
+
+use Artefakt\Core\Domain\Contract\ExceptionInterface;
 
 /**
- * Domain Exception
+ * Out Of Bounds Exception
  *
  * @package    Artefakt\Core
- * @subpackage Artefakt\Core\Application\Exceptions
+ * @subpackage Artefakt\Core\Domain\Exceptions
  */
-class DomainException extends \Artefakt\Core\Domain\Exceptions\DomainException
+class OutOfBoundsException extends \DomainException implements ExceptionInterface
 {
-
+    /**
+     * Unknown node
+     *
+     * @var string
+     */
+    const UNKNOWN_NODE_STR = 'Unknown node "%s"';
+    /**
+     * Unknown node
+     *
+     * @var int
+     */
+    const UNKNOWN_NODE = 1531252812;
 }

@@ -37,8 +37,8 @@
 namespace Artefakt\Core\Infrastructure\Facade;
 
 use Artefakt\Core\Infrastructure\Contract\ResettableInterface;
-use Artefakt\Core\Infrastructure\Facade\Cache;
-use Artefakt\Core\Infrastructure\Facade\Environment;
+use Artefakt\Core\Infrastructure\Factory\FilesystemNodeFactory;
+use Artefakt\Core\Infrastructure\Model\FilesystemCollection;
 
 /**
  * Artefakt Pattern Library
@@ -48,6 +48,13 @@ use Artefakt\Core\Infrastructure\Facade\Environment;
  */
 class Artefakt implements ResettableInterface
 {
+    /**
+     * Collection
+     *
+     * @var FilesystemCollection
+     */
+    protected static $collection = null;
+
     /**
      * Return all plugins of a particular type
      *
@@ -70,5 +77,21 @@ class Artefakt implements ResettableInterface
     {
         Environment::reset();
         Cache::reset();
+    }
+
+    /**
+     * Return the library collection instance
+     *
+     * @return FilesystemCollection Library collection
+     */
+    protected static function collection()
+    {
+        // One-time library instantiation
+        if (self::$collection === null) {
+            $rootDescriptor   = Environment::get(Environment::ROOT).DIRECTORY_SEPARATOR.'collection.json';
+            self::$collection = FilesystemNodeFactory::createFromDescriptor($rootDescriptor);
+        }
+
+        return self::$collection;
     }
 }

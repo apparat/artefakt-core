@@ -226,7 +226,7 @@ class Environment extends AbstractResettable
     public static function initialize(string $root, string $components, string $documents, string $cache): void
     {
         $directories  = [self::COMPONENTS => $components, self::DOCUMENTS => $documents, self::CACHE => $cache];
-        $dotEnvParser = new Envparser("$root/.env", true);
+        $dotEnvParser = new Envparser($root.DIRECTORY_SEPARATOR.'.env', true);
         $dotEnvEditor = new Enveditor($dotEnvParser);
 
         // Run through all necessary directories
@@ -245,5 +245,11 @@ class Environment extends AbstractResettable
 
         // Save the environment variables
         $dotEnvEditor->save();
+
+        // Initialize the root descriptor
+        $rootDescriptor = Path::makeAbsolute($components.DIRECTORY_SEPARATOR.'collection.json', $root);
+        if (!file_exists($rootDescriptor)) {
+            file_put_contents($rootDescriptor, '{}');
+        }
     }
 }

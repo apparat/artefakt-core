@@ -58,4 +58,28 @@ class RuntimeException extends \RuntimeException implements ExceptionInterface
      * @var string
      */
     const UNKNOWN_NODE_PROPERTY = 1530822827;
+    /**
+     * Invalid node name
+     *
+     * @var string
+     */
+    const INVALID_NODE_NAME_STR = 'Invalid node name "%s"';
+    /**
+     * Invalid node name
+     *
+     * @var string
+     */
+    const INVALID_NODE_NAME = 1529435561;
+    /**
+     * Invalid node slug
+     *
+     * @var string
+     */
+    const INVALID_NODE_SLUG_STR = 'Invalid node slug "%s"';
+    /**
+     * Invalid node slug
+     *
+     * @var string
+     */
+    const INVALID_NODE_SLUG = 1529523904;
 }

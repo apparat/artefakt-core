@@ -38,6 +38,7 @@ namespace Artefakt\Core\Domain\Model;
 
 use Artefakt\Core\Domain\Contract\AbstractNodeInterface;
 use Artefakt\Core\Domain\Contract\CollectionInterface;
+use Artefakt\Core\Domain\Exceptions\OutOfBoundsException;
 
 /**
  * Component Collection
@@ -176,6 +177,32 @@ class Collection extends AbstractNode implements CollectionInterface
     public function contains(AbstractNodeInterface $node): bool
     {
         return isset($this->nodes[spl_object_hash($node)]);
+    }
+
+    /**
+     * Find a contained node by slug
+     *
+     * @param string $slug Slug
+     *
+     * @return AbstractNodeInterface Contained node
+     * @throws OutOfBoundsException If the node is unknown
+     */
+    public function find(string $slug): AbstractNodeInterface
+    {
+        $slug = $this->validateSlug($slug);
+
+        // Run through all contained nodes
+        foreach ($this->nodes as $node) {
+            if ($node->slug == $slug) {
+                return $node;
+            }
+        }
+
+        // If the node is unknown
+        throw new OutOfBoundsException(
+            sprintf(OutOfBoundsException::UNKNOWN_NODE_STR, $slug),
+            OutOfBoundsException::UNKNOWN_NODE
+        );
     }
 
     /**

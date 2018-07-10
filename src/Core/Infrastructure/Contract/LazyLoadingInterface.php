@@ -36,13 +36,15 @@
 
 namespace Artefakt\Core\Infrastructure\Contract;
 
+use Artefakt\Core\Ports\Contract\NodeInterface;
+
 /**
  * Lazy Loading Interface
  *
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Infrastructure\Contract
  */
-interface LazyLoadingInterface
+interface LazyLoadingInterface extends NodeInterface
 {
     /**
      * Properties have been loaded
