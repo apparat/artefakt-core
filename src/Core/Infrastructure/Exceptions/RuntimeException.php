@@ -92,4 +92,16 @@ class RuntimeException extends \Artefakt\Core\Domain\Exceptions\RuntimeException
      * @var int
      */
     const INVALID_NODE_DESCRIPTOR = 1530912244;
+    /**
+     * Invalid collection
+     *
+     * @var string
+     */
+    const INVALID_COLLECTION_STR = 'Invalid collection "%s"';
+    /**
+     * Invalid collection
+     *
+     * @var int
+     */
+    const INVALID_COLLECTION = 1531946432;
 }

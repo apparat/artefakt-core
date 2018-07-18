@@ -36,7 +36,7 @@
 
 namespace Artefakt\Core\Infrastructure\Facade;
 
-use Artefakt\Core\Infrastructure\Exceptions\DomainException;
+use Artefakt\Core\Infrastructure\Exceptions\OutOfBoundsException;
 use Artefakt\Core\Infrastructure\Exceptions\RuntimeException;
 use Codervio\Envmanager\Enveditor;
 use Codervio\Envmanager\Envparser;
@@ -167,7 +167,6 @@ class Environment extends AbstractResettable
         }
 
 
-
         $this->mergeValues($this->env, getenv());
     }
 
@@ -178,7 +177,7 @@ class Environment extends AbstractResettable
      * @param mixed $default Default value
      *
      * @return string Environment variable value
-     * @throws DomainException If the environment variable is unknown
+     * @throws OutOfBoundsException If the environment variable is unknown
      */
     public static function get(string $name, $default = null): string
     {
@@ -195,9 +194,9 @@ class Environment extends AbstractResettable
         }
 
         // If the environment variable is unknown
-        throw new DomainException(
-            sprintf(DomainException::UNKNOWN_ENVIRONMENT_VARIABLE_STR, $name),
-            DomainException::UNKNOWN_ENVIRONMENT_VARIABLE
+        throw new OutOfBoundsException(
+            sprintf(OutOfBoundsException::UNKNOWN_ENVIRONMENT_VARIABLE_STR, $name),
+            OutOfBoundsException::UNKNOWN_ENVIRONMENT_VARIABLE
         );
     }
 

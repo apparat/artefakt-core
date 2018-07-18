@@ -40,6 +40,7 @@ use Artefakt\Core\Domain\Contract\CollectionInterface;
 use Artefakt\Core\Domain\Exceptions\OutOfBoundsException as DomainOutOfBoundsException;
 use Artefakt\Core\Infrastructure\Cli\Application;
 use Artefakt\Core\Infrastructure\Exceptions\OutOfBoundsException;
+use Artefakt\Core\Infrastructure\Exceptions\RuntimeException;
 use Artefakt\Core\Infrastructure\Facade\Artefakt as InfrastructureArtefakt;
 use Artefakt\Core\Infrastructure\Factory\SlugFactory;
 use Artefakt\Core\Ports\Contract\NodeInterface;
@@ -78,21 +79,33 @@ class Artefakt extends InfrastructureArtefakt
      * @param string $path Node path
      *
      * @return NodeInterface Library node
+     * @throws RuntimeException If the collection is invalid
+     * @throws OutOfBoundsException If the path can't be resolved
      * @api
      */
     public static function get(string $path = ''): NodeInterface
     {
-        $path  = trim($path);
-        $node  = static::collection();
-        $slugs = strlen($path) ? SlugFactory::createFromPath($path) : [];
+        $path           = trim($path);
+        $node           = static::collection();
+        $slugs          = strlen($path) ? SlugFactory::createFromPath($path) : [];
+        $collectionPath = '';
 
         // Run through the slug path
         foreach ($slugs as $slug) {
+            $collectionPath .= "/$slug";
+
+            // If the collection is invalid
             if (!($node instanceof CollectionInterface)) {
-                throw new OutOfBoundsException();
+                throw new RuntimeException(
+                    sprintf(RuntimeException::INVALID_COLLECTION_STR, $collectionPath),
+                    RuntimeException::INVALID_COLLECTION
+                );
             }
+
             try {
                 $node = $node->find($slug);
+
+                // If the path can't be resolved
             } catch (DomainOutOfBoundsException $e) {
                 /** @var OutOfBoundsException $elevated */
                 $elevated = Elevator::elevate($e, OutOfBoundsException::class);

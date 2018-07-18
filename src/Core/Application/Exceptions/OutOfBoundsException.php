@@ -42,7 +42,7 @@ namespace Artefakt\Core\Application\Exceptions;
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Application\Exceptions
  */
-class DomainException extends \Artefakt\Core\Domain\Exceptions\OutOfBoundsException
+class OutOfBoundsException extends \Artefakt\Core\Domain\Exceptions\OutOfBoundsException
 {
 
 }

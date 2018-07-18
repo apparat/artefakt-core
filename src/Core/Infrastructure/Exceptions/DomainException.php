@@ -42,18 +42,7 @@ namespace Artefakt\Core\Infrastructure\Exceptions;
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Infrastructure\Exceptions
  */
-class DomainException extends \Artefakt\Core\Application\Exceptions\DomainException
+class DomainException extends \Artefakt\Core\Domain\Exceptions\DomainException
 {
-    /**
-     * Unknown environment variable
-     *
-     * @var string
-     */
-    const UNKNOWN_ENVIRONMENT_VARIABLE_STR = 'Unknown environment variable "%s"';
-    /**
-     * Unknown environment variable
-     *
-     * @var int
-     */
-    const UNKNOWN_ENVIRONMENT_VARIABLE = 1529739851;
+
 }

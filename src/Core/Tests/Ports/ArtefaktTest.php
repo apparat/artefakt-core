@@ -37,6 +37,7 @@
 namespace Artefakt\Core\Tests\Ports;
 
 use Artefakt\Core\Infrastructure\Cli\Application;
+use Artefakt\Core\Infrastructure\Model\FilesystemCollection;
 use Artefakt\Core\Ports\Artefakt;
 use Artefakt\Core\Tests\AbstractTestBase;
 
@@ -62,6 +63,7 @@ class ArtefaktTest extends AbstractTestBase
      */
     public function testGet()
     {
-        print_r(Artefakt::get());
+        $rootCollection = Artefakt::get();
+        $this->assertInstanceOf(FilesystemCollection::class, $rootCollection);
     }
 }

@@ -60,7 +60,7 @@ namespace Artefakt\Core\Tests\Infrastructure {
         /**
          * Test the environment
          *
-         * @expectedException \Artefakt\Core\Infrastructure\Exceptions\DomainException
+         * @expectedException \Artefakt\Core\Infrastructure\Exceptions\OutOfBoundsException
          * @expectedExceptionCode 1529739851
          */
         public function testEnvironment()
@@ -86,7 +86,7 @@ namespace Artefakt\Core\Tests\Infrastructure {
             $this->assertFileExists($tempDirectory.DIRECTORY_SEPARATOR.'.env');
             $this->assertTrue(unlink($tempDirectory.DIRECTORY_SEPARATOR.'.env'));
             foreach (array_merge($directories, [$tempDirectory]) as $unlink) {
-                $this->assertTrue(rmdir(Path::makeAbsolute($unlink, $tempDirectory)));
+                $this->assertTrue(rmrdir(Path::makeAbsolute($unlink, $tempDirectory)));
             }
         }
 
