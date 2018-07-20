@@ -41,8 +41,15 @@ namespace Artefakt\Core\Domain\Contract;
  *
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Domain\Contract
+ * @property string $name Node name
+ * @property string $slug Node slug
  */
 interface AbstractNodeInterface
 {
-
+    /**
+     * Set the component name slug
+     *
+     * @param string $slug Component name slug
+     */
+    public function setSlug(string $slug): void;
 }

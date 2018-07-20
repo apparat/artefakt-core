@@ -246,7 +246,7 @@ class Environment extends AbstractResettable
         $dotEnvEditor->save();
 
         // Initialize the root descriptor
-        $rootDescriptor = Path::makeAbsolute($components.DIRECTORY_SEPARATOR.'collection.json', $root);
+        $rootDescriptor = Path::makeAbsolute($components.DIRECTORY_SEPARATOR.'node.json', $root);
         if (!file_exists($rootDescriptor)) {
             file_put_contents($rootDescriptor, '{}');
         }

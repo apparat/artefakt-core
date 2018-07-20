@@ -62,4 +62,30 @@ abstract class AbstractTestBase extends TestCase
         parent::setUpBeforeClass();
         self::$slugify = new Slugify();
     }
+
+    /**
+     * Recursively copy a directory
+     *
+     * @param string $source Source directory
+     * @param string $target Target directory
+     */
+    protected static function copyRecursive($source, $target): void
+    {
+        if (!is_dir($target)) {
+            mkdir($target, 0755, true);
+        }
+        foreach (
+            $iterator = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
+                \RecursiveIteratorIterator::SELF_FIRST) as $item
+        ) {
+            if ($item->isDir()) {
+                if (!is_dir($target.DIRECTORY_SEPARATOR.$iterator->getSubPathName())) {
+                    mkdir($target.DIRECTORY_SEPARATOR.$iterator->getSubPathName());
+                }
+            } elseif (!is_file($target.DIRECTORY_SEPARATOR.$iterator->getSubPathName())) {
+                copy($item, $target.DIRECTORY_SEPARATOR.$iterator->getSubPathName());
+            }
+        }
+    }
 }

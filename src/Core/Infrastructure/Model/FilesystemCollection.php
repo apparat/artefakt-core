@@ -55,6 +55,12 @@ class FilesystemCollection extends Collection implements LazyLoadingInterface
      * Use the Lazy Loading Trait
      */
     use LazyLoadingTrait;
+    /**
+     * Descriptor file name
+     *
+     * @var string
+     */
+    const DESCRIPTOR = 'collection.json';
 
     /**
      * Return the current node
@@ -204,5 +210,19 @@ class FilesystemCollection extends Collection implements LazyLoadingInterface
         $this->load();
 
         return parent::contains($node);
+    }
+
+    /**
+     * Find a contained node by slug
+     *
+     * @param string $slug Slug
+     *
+     * @return AbstractNodeInterface Contained node
+     */
+    public function find(string $slug): AbstractNodeInterface
+    {
+        $this->load();
+
+        return parent::find($slug);
     }
 }

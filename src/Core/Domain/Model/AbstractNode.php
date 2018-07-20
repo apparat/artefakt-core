@@ -73,7 +73,7 @@ abstract class AbstractNode implements AbstractNodeInterface
      *
      * @param string $slug Component name slug
      */
-    public function setSlug(string $slug)
+    public function setSlug(string $slug): void
     {
         $this->properties['slug'] = $this->validateSlug($slug);
     }
@@ -106,7 +106,7 @@ abstract class AbstractNode implements AbstractNodeInterface
      *
      * @param string $name Component name
      */
-    protected function setName(string $name)
+    protected function setName(string $name): void
     {
         $name = trim($name);
         if (!strlen($name)) {

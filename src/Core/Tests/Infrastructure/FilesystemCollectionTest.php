@@ -70,6 +70,7 @@ class FilesystemCollectionTest extends AbstractTestBase
      */
     public function testFileSystemCollection()
     {
+        echo self::$rootDirectory;
         $collection = new FilesystemCollection(self::$rootDirectory);
         $this->assertInstanceOf(FilesystemCollection::class, $collection);
         $this->assertEquals(1, count($collection));

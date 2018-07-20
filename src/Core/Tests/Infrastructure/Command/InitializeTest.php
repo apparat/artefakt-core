@@ -71,6 +71,6 @@ class InitializeTest extends AbstractCommandTestBase
         $this->assertDirectoryExists(Path::makeAbsolute('build/doc', self::$rootDirectory));
         $this->assertDirectoryExists(Path::makeAbsolute('build/cac', self::$rootDirectory));
         $this->assertFileExists(Path::makeAbsolute('.env', self::$rootDirectory));
-        $this->assertFileExists(Path::makeAbsolute('build/cmp/collection.json', self::$rootDirectory));
+        $this->assertFileExists(Path::makeAbsolute('build/cmp/node.json', self::$rootDirectory));
     }
 }

@@ -88,7 +88,7 @@ class Artefakt implements ResettableInterface
     {
         // One-time library instantiation
         if (self::$collection === null) {
-            $rootDescriptor   = Environment::get(Environment::ROOT).DIRECTORY_SEPARATOR.'collection.json';
+            $rootDescriptor   = Environment::get(Environment::COMPONENTS).DIRECTORY_SEPARATOR.'collection.json';
             self::$collection = FilesystemNodeFactory::createFromDescriptor($rootDescriptor);
         }
 

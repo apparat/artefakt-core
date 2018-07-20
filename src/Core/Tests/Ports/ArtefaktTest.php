@@ -37,7 +37,9 @@
 namespace Artefakt\Core\Tests\Ports;
 
 use Artefakt\Core\Infrastructure\Cli\Application;
+use Artefakt\Core\Infrastructure\Facade\Environment;
 use Artefakt\Core\Infrastructure\Model\FilesystemCollection;
+use Artefakt\Core\Infrastructure\Model\FilesystemComponent;
 use Artefakt\Core\Ports\Artefakt;
 use Artefakt\Core\Tests\AbstractTestBase;
 
@@ -50,6 +52,36 @@ use Artefakt\Core\Tests\AbstractTestBase;
 class ArtefaktTest extends AbstractTestBase
 {
     /**
+     * Main directory
+     *
+     * @var string
+     */
+    protected static $mainDirectory;
+
+    /**
+     * Setup
+     */
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+
+        self::$mainDirectory = Environment::get(Environment::COMPONENTS);
+        self::copyRecursive(
+            dirname(__DIR__).DIRECTORY_SEPARATOR.'Fixture'.DIRECTORY_SEPARATOR.'Components',
+            self::$mainDirectory
+        );
+    }
+
+    /**
+     * Tear down
+     */
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+        rmrdir(self::$mainDirectory);
+    }
+
+    /**
      * Test the command line Interface
      */
     public function testCli()
@@ -61,9 +93,42 @@ class ArtefaktTest extends AbstractTestBase
     /**
      * Test getting the library collection
      */
-    public function testGet()
+    public function testGetRootCollection()
     {
         $rootCollection = Artefakt::get();
+        $this->assertInstanceOf(FilesystemCollection::class, $rootCollection);
+    }
+
+    /**
+     * Test getting a nested collection
+     */
+    public function testGetCollection()
+    {
+        $collection = Artefakt::get('level-1/level-2');
+        $this->assertInstanceOf(FilesystemCollection::class, $collection);
+        $this->assertEquals('level-2', $collection->slug);
+        $this->assertEquals(2, count($collection));
+    }
+
+    /**
+     * Test getting a component
+     */
+    public function testGetComponent()
+    {
+        $collection = Artefakt::get('level-1/component-3');
+        $this->assertInstanceOf(FilesystemComponent::class, $collection);
+        $this->assertEquals('component-3', $collection->slug);
+    }
+
+    /**
+     * Test getting the library collection with an invalid path
+     *
+     * @expectedException \Artefakt\Core\Infrastructure\Exceptions\OutOfBoundsException
+     * @expectedExceptionCode 1531252812
+     */
+    public function testGetInvalid()
+    {
+        $rootCollection = Artefakt::get('invalid');
         $this->assertInstanceOf(FilesystemCollection::class, $rootCollection);
     }
 }

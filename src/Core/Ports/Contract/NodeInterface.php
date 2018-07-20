@@ -43,6 +43,8 @@ use Artefakt\Core\Domain\Contract\AbstractNodeInterface;
  *
  * @package    Artefakt\Core
  * @subpackage Artefakt\Core\Ports\Contract
+ * @property string $name Node name
+ * @property string $slug Node slug
  */
 interface NodeInterface extends AbstractNodeInterface
 {

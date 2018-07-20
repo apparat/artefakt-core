@@ -44,7 +44,6 @@ use Artefakt\Core\Infrastructure\Exceptions\RuntimeException;
 use Artefakt\Core\Infrastructure\Facade\Artefakt as InfrastructureArtefakt;
 use Artefakt\Core\Infrastructure\Factory\SlugFactory;
 use Artefakt\Core\Ports\Contract\NodeInterface;
-use Jkphl\Elevator\Ports\Elevator;
 
 /**
  * Artefakt Facade
@@ -107,9 +106,7 @@ class Artefakt extends InfrastructureArtefakt
 
                 // If the path can't be resolved
             } catch (DomainOutOfBoundsException $e) {
-                /** @var OutOfBoundsException $elevated */
-                $elevated = Elevator::elevate($e, OutOfBoundsException::class);
-                throw $elevated;
+                throw new OutOfBoundsException($e->getMessage(), $e->getCode());
             }
         }
 

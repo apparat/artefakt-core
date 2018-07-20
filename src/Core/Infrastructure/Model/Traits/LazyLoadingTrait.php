@@ -67,6 +67,7 @@ trait LazyLoadingTrait
     public function __construct(string $directory)
     {
         $this->directory = $directory;
+        parent::__construct(basename($directory));
     }
 
     /**
@@ -110,7 +111,7 @@ trait LazyLoadingTrait
      */
     protected function loadProperties(): void
     {
-        if ($this->assign(Filesystem::loadJSON($this->directory.DIRECTORY_SEPARATOR.'collection.json'))) {
+        if ($this->assign(Filesystem::loadJSON($this->directory.DIRECTORY_SEPARATOR.static::DESCRIPTOR))) {
             $this->loaded |= LazyLoadingInterface::LOADED_PROPERTIES;
         }
     }

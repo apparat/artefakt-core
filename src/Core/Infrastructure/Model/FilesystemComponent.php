@@ -53,6 +53,12 @@ class FilesystemComponent extends Component implements LazyLoadingInterface
      * Use the Lazy Loading Trait
      */
     use LazyLoadingTrait;
+    /**
+     * Descriptor file name
+     *
+     * @var string
+     */
+    const DESCRIPTOR = 'component.json';
 
     /**
      * Load the node from the file system
